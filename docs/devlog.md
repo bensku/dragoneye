@@ -5,3 +5,5 @@ Commit messages go to more detail about changes in code.
 | Day   | Time | Task |
 | ----- | ---- | ---- |
 | 30.10 | 1    | setting up Maven project and Git repository |
+| 31.10 | 2    | writing requirements |
+|       | 0.5  | drawing diagram for requirements (draw.io) |
