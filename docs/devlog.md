@@ -8,3 +8,4 @@ Commit messages go to more detail about changes in code.
 | 31.10 | 2    | writing requirements |
 |       | 0.5  | drawing diagram for requirements (draw.io) |
 | 1.11  | 1    | investigate database-related libraries |
+|       | 2    | start experimenting with data classes based on requirements |
