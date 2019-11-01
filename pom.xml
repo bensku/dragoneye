@@ -21,9 +21,9 @@
   		<version>13.0.1</version>
   	</dependency>
   	<dependency>
-  		<groupId>org.jooq</groupId>
-  		<artifactId>jooq</artifactId>
-  		<version>3.12.2</version>
+  		<groupId>org.dizitart</groupId>
+  		<artifactId>nitrite</artifactId>
+  		<version>3.3.0</version>
   	</dependency>
   </dependencies>
   
