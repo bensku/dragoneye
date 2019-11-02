@@ -10,3 +10,4 @@ Commit messages go to more detail about changes in code.
 | 1.11  | 1    | investigating database-related libraries |
 |       | 1    | experimenting with data classes based on requirements |
 |       | 1.5  | exploring undo support implementation options |
+|       | 1    | working on game events |
