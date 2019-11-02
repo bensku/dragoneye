@@ -24,6 +24,7 @@ public class EventLog {
 		 * @param event Event to add.
 		 */
 		public void addEvent(GameEvent event) {
+			event.setLogIndexInternal(nextEvent++);
 			events.insert(event);
 		}
 		
@@ -32,8 +33,22 @@ public class EventLog {
 		 * @param event Event to remove.
 		 */
 		public void removeEvent(GameEvent event) {
+			if (event.getLogIndex() == nextEvent - 1) {
+				nextEvent--; // Removed last in log; we can put something in its place
+			} // else: leaving a hole in event ids for DB to handle
+			event.setLogIndexInternal(-1); // Not in log anymore
 			events.remove(event);
 		}
+		
+		/**
+		 * Updates a game event that is already in log.
+		 * @param event Event to update.
+		 */
+		public void updateEvent(GameEvent event) {
+			events.update(event);
+		}
+		
+		// TODO reordering events?
 	}
 	
 	/**
@@ -60,11 +75,19 @@ public class EventLog {
 	 */
 	private final ObjectRepository<GameEvent> events;
 	
+	/**
+	 * Log index of next event that is added. We're not using
+	 * {@link ObjectRepository#size()} on {@link #events}, because its time
+	 * complexity is not known.
+	 */
+	private int nextEvent;
+	
 	public EventLog(List<LogAction> actions, int lastAction, ObjectRepository<GameEvent> events) {
 		this.mutator = new Mutator();
 		this.actions = actions;
 		this.lastAction = lastAction;
 		this.events = events;
+		this.nextEvent = (int) events.size(); // Won't ever have more than 2^31-1 events
 	}
 	
 	/**

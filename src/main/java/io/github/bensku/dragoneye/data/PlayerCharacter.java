@@ -3,7 +3,7 @@ package io.github.bensku.dragoneye.data;
 import java.util.Objects;
 
 /**
- * A character in game {@link World} played by player (as opposed to NPC, 
+ * A character in game {@link GameWorld} played by player (as opposed to NPC, 
  * played by the GM).
  *
  */

@@ -3,7 +3,7 @@ package io.github.bensku.dragoneye.data;
 import java.util.ArrayList;
 import java.util.List;
 
-public class World {
+public class GameWorld {
 
 	/**
 	 * Display name of the world.
@@ -15,7 +15,7 @@ public class World {
 	 */
 	private final List<PlayerCharacter> pcs;
 	
-	public World() {
+	public GameWorld() {
 		this.name = "";
 		this.pcs = new ArrayList<>();
 	}
