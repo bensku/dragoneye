@@ -1,5 +1,7 @@
 package io.github.bensku.dragoneye.data;
 
+import org.dizitart.no2.objects.Id;
+
 import io.github.bensku.dragoneye.data.event.EventLog;
 
 /**
@@ -9,17 +11,30 @@ import io.github.bensku.dragoneye.data.event.EventLog;
 public class Game {
 	
 	/**
+	 * Index of this game in the world.
+	 */
+	@Id
+	private final int index;
+	
+	/**
 	 * World this game is happening on.
 	 */
-	private final GameWorld world;
-
-	/**
-	 * Index of this game in world.
-	 */
-	private final int index;
+	transient GameWorld world;
 	
 	/**
 	 * Events that happened during this game.
 	 */
-	private final EventLog events;
+	transient EventLog events;
+	
+	Game(int index) {
+		this.index = index;
+	}
+	
+	public GameWorld getWorld() {
+		return world;
+	}
+	
+	public EventLog getEventLog() {
+		return events;
+	}
 }

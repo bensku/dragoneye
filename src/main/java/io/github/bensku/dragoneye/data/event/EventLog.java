@@ -5,12 +5,19 @@ import java.util.List;
 import org.dizitart.no2.objects.Cursor;
 import org.dizitart.no2.objects.ObjectRepository;
 
+import io.github.bensku.dragoneye.data.Game;
+
 /**
  * Log of {@link GameEvent}s. Has full undo/redo support with
  * {@link LogAction}s.
  *
  */
 public class EventLog {
+	
+	/**
+	 * Game this event log is for.
+	 */
+	private final Game game;
 	
 	/**
 	 * Allows mutation of event log. This should only be used inside
@@ -82,7 +89,8 @@ public class EventLog {
 	 */
 	private int nextEvent;
 	
-	public EventLog(List<LogAction> actions, int lastAction, ObjectRepository<GameEvent> events) {
+	public EventLog(Game game, List<LogAction> actions, int lastAction, ObjectRepository<GameEvent> events) {
+		this.game = game;
 		this.mutator = new Mutator();
 		this.actions = actions;
 		this.lastAction = lastAction;
@@ -98,7 +106,7 @@ public class EventLog {
 		if (lastAction == -1) {
 			return; // Nothing to undo
 		}
-		actions.get(lastAction--).undo(mutator);
+		actions.get(lastAction--).undo(mutator, game);
 	}
 	
 	/**
@@ -109,7 +117,7 @@ public class EventLog {
 		if (lastAction == actions.size() - 1) {
 			return; // Nothing to redo
 		}
-		actions.get(lastAction++).apply(mutator);
+		actions.get(lastAction++).apply(mutator, game);
 	}
 	
 	/**
@@ -129,7 +137,7 @@ public class EventLog {
 		for (int i = actions.size() - 1; i > lastAction; i--) {
 			actions.remove(i);
 		}
-		action.apply(mutator);
+		action.apply(mutator, game);
 	}
 	
 	/**
