@@ -39,7 +39,7 @@ public class LogAction {
 	 * @param applier Consumer that applies this action to mutator.
 	 * @param undoer Consumer that undoes this action in mutator.
 	 */
-	protected LogAction(BiConsumer<EventLog.Mutator, Game> applier, BiConsumer<EventLog.Mutator, Game> undoer) {
+	public LogAction(BiConsumer<EventLog.Mutator, Game> applier, BiConsumer<EventLog.Mutator, Game> undoer) {
 		this.undoer = undoer;
 		this.applier = applier;
 		this.undone = false;

@@ -2,6 +2,7 @@ package io.github.bensku.dragoneye.data.event;
 
 import java.util.List;
 
+import org.dizitart.no2.NitriteId;
 import org.dizitart.no2.objects.Cursor;
 import org.dizitart.no2.objects.ObjectRepository;
 
@@ -65,7 +66,7 @@ public class EventLog {
 	private final Mutator mutator;
 
 	/**
-	 * Actions that have been done to this event log in past
+	 * Actions that have been done to this event log in past.
 	 */
 	private final List<LogAction> actions;
 	
@@ -137,7 +138,37 @@ public class EventLog {
 		for (int i = actions.size() - 1; i > lastAction; i--) {
 			actions.remove(i);
 		}
-		action.apply(mutator, game);
+		lastAction++; // Initially not undone
+		actions.add(action); // Store action for undo/redo
+		action.apply(mutator, game); // Apply the action
+	}
+	
+	/**
+	 * Adds an event to this log. Supports undo/redo.
+	 * @param event Event to add.
+	 */
+	public void addEvent(GameEvent event) {
+	    doAction(new LogAction((mut, game) -> mut.addEvent(event),
+	            (mut, game) -> mut.removeEvent(event)));
+	}
+	
+	/**
+	 * Removes an event from this log. Supports undo/redo.
+	 * @param event Event to remove.
+	 */
+	public void removeEvent(GameEvent event) {
+	    doAction(new LogAction((mut, game) -> mut.removeEvent(event),
+	            (mut, game) -> mut.addEvent(event)));
+	}
+	
+	/**
+	 * Updates data of an event.
+	 * @param event Event to update.
+	 */
+	public void updateEvent(GameEvent event) {
+	    GameEvent original = events.getById(NitriteId.createId((long) event.getLogIndex()));
+	    doAction(new LogAction((mut, game) -> mut.updateEvent(event),
+	            (mut, game) -> mut.updateEvent(original)));
 	}
 	
 	/**
