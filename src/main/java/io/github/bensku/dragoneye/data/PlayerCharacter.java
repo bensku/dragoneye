@@ -41,6 +41,7 @@ public class PlayerCharacter {
 	}
 
 	public void setName(String name) {
+	    Objects.requireNonNull(name);
 		this.name = name;
 	}
 
@@ -49,6 +50,7 @@ public class PlayerCharacter {
 	}
 
 	public void setCharClass(String charClass) {
+	    Objects.requireNonNull(charClass);
 		this.charClass = charClass;
 	}
 
@@ -57,6 +59,9 @@ public class PlayerCharacter {
 	}
 
 	public void setXp(int xp) {
+	    if (xp < 0) {
+	        throw new IllegalArgumentException();
+	    }
 		this.xp = xp;
 	}
 	
@@ -103,7 +108,10 @@ public class PlayerCharacter {
 	 * @param level Level override.
 	 */
 	public void overrideLevel(int level) {
-		Objects.checkIndex(level, 21); // Level 0 characters are not RAW, but they're sometimes used
+		// Level 0 characters are not RAW, but they're sometimes used
+	    if (level < 0 || level > 20) {
+	        throw new IllegalArgumentException("illegal level");
+	    }
 		levelOverride = level;
 	}
 	

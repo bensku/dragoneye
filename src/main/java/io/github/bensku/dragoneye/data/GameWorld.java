@@ -2,6 +2,7 @@ package io.github.bensku.dragoneye.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -55,6 +56,7 @@ public class GameWorld {
 	}
 
 	public void setName(String name) {
+	    Objects.requireNonNull(name);
 		this.name = name;
 	}
 
