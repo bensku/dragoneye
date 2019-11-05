@@ -1,8 +1,13 @@
 package io.github.bensku.dragoneye.data.event;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.dizitart.no2.objects.Id;
+
+import io.github.bensku.dragoneye.data.Game;
+import io.github.bensku.dragoneye.data.event.EventLog.Mutator;
 
 /**
  * An event in {@link EventLog}.
@@ -25,12 +30,23 @@ public class GameEvent {
 	/**
 	 * XP gained by characters due to this event.
 	 */
-	private int xp;
+	private final int xp;
+	
+	/**
+	 * Events that were added due to this event. Null when there are no
+	 * such events.
+	 * TODO serialization
+	 */
+	private transient List<GameEvent> dependentEvents;
 	
 	protected GameEvent() {
+	    this(0);
+	}
+	
+	protected GameEvent(int xp) {
 		this.logIndex = -1;
 		this.creationTime = Instant.now();
-		this.xp = 0;
+		this.xp = xp;
 	}
 	
 	/**
@@ -61,9 +77,47 @@ public class GameEvent {
 	public int getXp() {
 		return xp;
 	}
-
-	public void setXp(int xp) {
-		this.xp = xp;
+	
+	protected void addDependentEvent(GameEvent event) {
+	    if (dependentEvents == null) {
+	        dependentEvents = new ArrayList<>();
+	    }
+	    dependentEvents.add(event);
+	}
+	
+	/**
+	 * Called when this event is added to an {@link EventLog}.
+	 * @param mut Mutator for event log.
+	 * @param game Game the event log is for.
+	 */
+	public void added(EventLog.Mutator mut, Game game) {
+	    game.getWorld().getCharacters().forEach(pc -> {
+	        if (pc.addXp(xp)) { // If enough XP for level up, add event for it
+	            LevelUpEvent event = new LevelUpEvent();
+	            addDependentEvent(event);
+	            mut.addEvent(event);
+	        }
+	    });
+	}
+	
+	/**
+     * Called when this event is removed from an {@link EventLog}.
+     * @param mut Mutator for event log.
+     * @param game Game the event log is for.
+     */
+	public void removed(EventLog.Mutator mut, Game game) {
+        // Remove dependent events
+        if (dependentEvents != null) {
+            for (GameEvent event : dependentEvents) {
+                mut.removeEvent(event);
+            }
+            dependentEvents = null;
+        }
+        
+        // Take away added XP
+        game.getWorld().getCharacters().forEach(pc -> {
+            pc.setXp(pc.getXp() - xp);
+        });
 	}
 
 }

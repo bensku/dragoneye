@@ -33,6 +33,7 @@ public class EventLog {
 		 */
 		public void addEvent(GameEvent event) {
 			event.setLogIndexInternal(nextEvent++);
+			event.added(this, game); // Let event to mutate log
 			events.insert(event);
 		}
 		
@@ -45,6 +46,7 @@ public class EventLog {
 				nextEvent--; // Removed last in log; we can put something in its place
 			} // else: leaving a hole in event ids for DB to handle
 			event.setLogIndexInternal(-1); // Not in log anymore
+			event.removed(this, game); // Let event to mutate log
 			events.remove(event);
 		}
 		
@@ -54,6 +56,9 @@ public class EventLog {
 		 */
 		public void updateEvent(GameEvent event) {
 			events.update(event);
+			// With updates, we do not allow events to mutate log
+			// Unless UI allows updates to XP, this shouldn't be a big deal
+			// (GM retroactively changing XP is seldom a good idea, anyway)
 		}
 		
 		// TODO reordering events?

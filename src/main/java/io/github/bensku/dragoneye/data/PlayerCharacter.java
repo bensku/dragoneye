@@ -65,6 +65,27 @@ public class PlayerCharacter {
 		this.xp = xp;
 	}
 	
+	/**
+	 * Adds XP to this character.
+	 * @param xp How much XP to add.
+	 * @return If the character leveled up.
+	 */
+	public boolean addXp(int xp) {
+	    if (xp == 0) {
+	        return false; // Nothing happened
+	    }
+	    if (xp < 0) {
+	        throw new IllegalArgumentException("negative xp added");
+	    }
+	    if (levelOverride != -1) {
+	        throw new IllegalArgumentException("level is overridden");
+	    }
+	    int oldLevel = computeLevel();
+	    setXp(getXp() + xp);
+	    int newLevel = computeLevel();
+	    return newLevel > oldLevel;
+	}
+	
 	private int computeLevel() {
 		// Leveling in D&D 5e doesn't follow any mathematical formula, so we use a lookup table
 		// Table source: 5e SRD
