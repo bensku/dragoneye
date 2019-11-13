@@ -1,18 +1,18 @@
 package io.github.bensku.dragoneye.test;
 
-import java.util.ArrayList;
-
-import org.dizitart.no2.Nitrite;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
-import io.github.bensku.dragoneye.data.event.EventLog;
-import io.github.bensku.dragoneye.data.event.GameEvent;
+import io.github.bensku.dragoneye.data.event.LevelUpEvent;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class EventLogTest {
 
-	private EventLog log = new EventLog(null, new ArrayList<>(), -1, Nitrite.builder().openOrCreate().getRepository(GameEvent.class));
+	private TestData data = new TestData();
 	
-	// TODO actual test cases
+	@Test
+	public void simpleEvent() {
+		data.log.addEvent(new LevelUpEvent(data.pc, 10));
+		data.log.getAllEvents().forEach(e -> System.out.println(e));
+	}
 }

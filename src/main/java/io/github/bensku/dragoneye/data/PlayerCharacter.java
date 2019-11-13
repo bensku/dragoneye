@@ -37,6 +37,11 @@ public class PlayerCharacter {
 	 */
 	private int levelOverride;
 	
+	@SuppressWarnings("unused") // Used by Jackson
+	private PlayerCharacter() {
+		this.id = -1;
+	}
+	
 	PlayerCharacter(int id) {
 		this.id = id;
 		this.name = "";

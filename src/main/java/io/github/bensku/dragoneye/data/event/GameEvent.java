@@ -23,10 +23,9 @@ public class GameEvent {
 	private int logIndex;
 
 	/**
-	 * When the event was created. This will NEVER be modified.
-	 * This is in UTC time.
+	 * When the event was created since UNIX epoch.
 	 */
-	private final Instant creationTime;
+	private final long creationTime;
 	
 	/**
 	 * XP gained by characters due to this event.
@@ -46,7 +45,7 @@ public class GameEvent {
 	
 	protected GameEvent(int xp) {
 		this.logIndex = -1;
-		this.creationTime = Instant.now();
+		this.creationTime = System.currentTimeMillis();
 		this.xp = xp;
 	}
 	
@@ -72,7 +71,7 @@ public class GameEvent {
 	}
 	
 	public Instant getCreationTime() {
-		return creationTime;
+		return Instant.ofEpochMilli(creationTime);
 	}
 
 	public int getXp() {

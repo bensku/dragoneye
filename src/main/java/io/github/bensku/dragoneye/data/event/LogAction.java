@@ -21,12 +21,6 @@ public class LogAction {
 	private final BiConsumer<EventLog.Mutator, Game> undoer;
 	
 	/**
-	 * If this action has been {@link #undo()}ne. {@link #redo()} to remove
-	 * this.
-	 */
-	private boolean undone;
-	
-	/**
 	 * Whether this action has been executed or not. Used by {@link EventLog}
 	 * to safeguard against executing same action more once, which would break
 	 * undo history.
@@ -42,7 +36,6 @@ public class LogAction {
 	public LogAction(BiConsumer<EventLog.Mutator, Game> applier, BiConsumer<EventLog.Mutator, Game> undoer) {
 		this.undoer = undoer;
 		this.applier = applier;
-		this.undone = false;
 		this.executed = false;
 	}
 	
@@ -52,7 +45,7 @@ public class LogAction {
 	 * @param game Game the event log belongs to.
 	 */
 	protected void apply(EventLog.Mutator mutator, Game game) {
-		if (!undone) {
+		if (executed) {
 			throw new IllegalArgumentException("already applied");
 		}
 		applier.accept(mutator, game);
@@ -64,7 +57,7 @@ public class LogAction {
 	 * @param game Game the event log belongs to.
 	 */
 	protected void undo(EventLog.Mutator mutator, Game game) {
-		if (undone) {
+		if (!executed) {
 			throw new IllegalArgumentException("already undone");
 		}
 		undoer.accept(mutator, game);
