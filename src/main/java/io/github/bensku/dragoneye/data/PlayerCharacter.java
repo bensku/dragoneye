@@ -18,6 +18,11 @@ public class PlayerCharacter {
 	private final int id;
 	
 	/**
+	 * Id of world this character belongs to.
+	 */
+	private final int worldId;
+	
+	/**
 	 * Name of the character.
 	 */
 	private String name;
@@ -40,10 +45,12 @@ public class PlayerCharacter {
 	@SuppressWarnings("unused") // Used by Jackson
 	private PlayerCharacter() {
 		this.id = -1;
+		this.worldId = -1;
 	}
 	
-	PlayerCharacter(int id) {
+	PlayerCharacter(int worldId, int id) {
 		this.id = id;
+		this.worldId = worldId;
 		this.name = "";
 		this.charClass = "";
 		this.xp = 0;

@@ -1,19 +1,14 @@
 package io.github.bensku.dragoneye.data;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.dizitart.no2.Nitrite;
-import org.dizitart.no2.NitriteId;
 import org.dizitart.no2.objects.Cursor;
 import org.dizitart.no2.objects.Id;
-import org.dizitart.no2.objects.ObjectRepository;
+import org.dizitart.no2.objects.filters.ObjectFilters;
 
 import io.github.bensku.dragoneye.data.event.EventLog;
 import io.github.bensku.dragoneye.data.event.GameEvent;
@@ -25,10 +20,10 @@ import io.github.bensku.dragoneye.data.event.GameEvent;
 public class GameWorld {
 
 	/**
-	 * Index of this world in {@link Universe}.
+	 * Unique id of this world {@link Universe}.
 	 */
 	@Id
-	final int index;
+	final int id;
 	
 	/**
 	 * Display name of the world.
@@ -45,18 +40,8 @@ public class GameWorld {
 	 */
 	transient Nitrite db;
 	
-	/**
-	 * Player characters in this world.
-	 */
-	transient ObjectRepository<PlayerCharacter> characters;
-	
-	/**
-	 * Games played in this world.
-	 */
-	transient ObjectRepository<Game> games;
-	
 	GameWorld(int index) {
-		this.index = index;
+		this.id = index;
 		this.name = "";
 	}
 	
@@ -78,11 +63,11 @@ public class GameWorld {
 	 * @return Player characters.
 	 */
 	public Cursor<PlayerCharacter> getCharacters() {
-		return characters.find();
+		return universe.characters.find(ObjectFilters.eq("worldId", id));
 	}
 	
 	public PlayerCharacter getCharacter(int id) {
-		return characters.getById(NitriteId.createId((long) id));
+		return universe.characters.find(ObjectFilters.eq("id", id)).firstOrDefault();
 	}
 	
 	/**
@@ -90,8 +75,8 @@ public class GameWorld {
 	 * @return A new character.
 	 */
 	public PlayerCharacter createCharacter() {
-		PlayerCharacter pc = new PlayerCharacter((int) characters.size());
-		characters.insert(pc);
+		PlayerCharacter pc = new PlayerCharacter(id, (int) universe.characters.size());
+		universe.characters.insert(pc);
 		return pc;
 	}
 	
@@ -100,7 +85,7 @@ public class GameWorld {
 	 * @param pc Existing character.
 	 */
 	public void updateCharacter(PlayerCharacter pc) {
-		characters.update(pc);
+		universe.characters.update(pc);
 	}
 	
 	/**
@@ -112,7 +97,7 @@ public class GameWorld {
 		game.world = this; // Reference to this world
 		// Create event log
 		// TODO persistent action history?
-		game.events = new EventLog(game, new ArrayList<>(), 0, db.getRepository("events-" + index, GameEvent.class));
+		game.events = new EventLog(game, new ArrayList<>(), 0, db.getRepository("events-" + id, GameEvent.class));
 		return game;
 	}
 	
@@ -121,7 +106,8 @@ public class GameWorld {
 	 * @return A stream with all games.
 	 */
 	public Stream<Game> getGames() {
-		return StreamSupport.stream(games.find().spliterator(), false)
+		Cursor<Game> games = universe.games.find(ObjectFilters.eq("worldId", id));
+		return StreamSupport.stream(games.spliterator(), false)
 				.map(this::injectGame);
 	}
 	
@@ -130,8 +116,8 @@ public class GameWorld {
 	 * @return A new game.
 	 */
 	public Game createGame() {
-		Game game = new Game((int) games.size());
-		games.insert(game);
+		Game game = new Game(id, (int) universe.games.size());
+		universe.games.insert(game);
 		return injectGame(game);
 	}
 	
@@ -141,6 +127,6 @@ public class GameWorld {
 	 * @param game Game to update.
 	 */
 	public void updateGame(Game game) {
-		games.update(game);
+		universe.games.update(game);
 	}
 }

@@ -11,10 +11,15 @@ import io.github.bensku.dragoneye.data.event.EventLog;
 public class Game {
 	
 	/**
-	 * Index of this game in the world.
+	 * Unique id of this game.
 	 */
 	@Id
 	private final int index;
+	
+	/**
+	 * Id of our game world.
+	 */
+	private final int worldId;
 	
 	/**
 	 * World this game is happening on.
@@ -26,8 +31,9 @@ public class Game {
 	 */
 	transient EventLog events;
 	
-	Game(int index) {
-		this.index = index;
+	Game(int worldId, int id) {
+		this.worldId = worldId;
+		this.index = id;
 	}
 	
 	public GameWorld getWorld() {

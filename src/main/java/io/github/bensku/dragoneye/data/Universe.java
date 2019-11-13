@@ -24,12 +24,24 @@ public class Universe {
 	private final ObjectRepository<GameWorld> worlds;
 	
 	/**
+	 * All games in all worlds.
+	 */
+	final ObjectRepository<Game> games;
+	
+	/**
+	 * All characters in all worlds.
+	 */
+	final ObjectRepository<PlayerCharacter> characters;
+	
+	/**
 	 * Creates a new universe.
 	 * @param db Database to load it from.
 	 */
 	public Universe(Nitrite db) {
 		this.db = db;
-		this.worlds = db.getRepository("worlds", GameWorld.class);
+		this.worlds = db.getRepository(GameWorld.class);
+		this.games = db.getRepository(Game.class);
+		this.characters = db.getRepository(PlayerCharacter.class);
 	}
 	
 	/**
@@ -40,8 +52,6 @@ public class Universe {
 	private GameWorld injectWorld(GameWorld world) {
 		world.universe = this;
 		world.db = db;
-		world.characters = db.getRepository("characters-" + world.index, PlayerCharacter.class);
-		world.games = db.getRepository("games-" + world.index, Game.class);
 		return world;
 	}
 	
