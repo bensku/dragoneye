@@ -1,12 +1,11 @@
 package io.github.bensku.dragoneye.test;
 
-import org.dizitart.no2.Nitrite;
-
 import io.github.bensku.dragoneye.data.Game;
 import io.github.bensku.dragoneye.data.GameWorld;
 import io.github.bensku.dragoneye.data.PlayerCharacter;
 import io.github.bensku.dragoneye.data.Universe;
 import io.github.bensku.dragoneye.data.event.EventLog;
+import io.github.bensku.dragoneye.data.event.EventTypes;
 
 public class TestData {
 
@@ -17,7 +16,8 @@ public class TestData {
 	public final EventLog log;
 	
 	public TestData() {
-		this.universe = new Universe(Nitrite.builder().openOrCreate());
+		EventTypes.finishRegistrations();
+		this.universe = Universe.create();
 		this.world = universe.createWorld();
 		this.pc = world.createCharacter();
 		this.game = world.createGame();

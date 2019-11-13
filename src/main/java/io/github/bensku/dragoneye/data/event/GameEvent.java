@@ -6,14 +6,16 @@ import java.util.List;
 
 import org.dizitart.no2.objects.Id;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import io.github.bensku.dragoneye.data.Game;
 import io.github.bensku.dragoneye.data.PlayerCharacter;
-import io.github.bensku.dragoneye.data.event.EventLog.Mutator;
 
 /**
  * An event in {@link EventLog}.
  *
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
 public class GameEvent {
 	
 	/**
@@ -128,6 +130,22 @@ public class GameEvent {
         game.getWorld().getCharacters().forEach(pc -> {
             pc.setXp(pc.getXp() - xp);
         });
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o == null) {
+			return false;
+		} else if (!o.getClass().equals(this.getClass())) {
+			return false;
+		}
+		GameEvent e = (GameEvent) o;
+		return e.creationTime == creationTime && e.logIndex == logIndex;
+	}
+	
+	@Override
+	public int hashCode() {
+		return logIndex;
 	}
 
 }

@@ -1,5 +1,7 @@
 package io.github.bensku.dragoneye.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
@@ -12,7 +14,8 @@ public class EventLogTest {
 	
 	@Test
 	public void simpleEvent() {
-		data.log.addEvent(new LevelUpEvent(data.pc, 10));
-		data.log.getAllEvents().forEach(e -> System.out.println(e));
+		LevelUpEvent event = new LevelUpEvent(data.pc, 10);
+		data.log.addEvent(event);
+		assertEquals(event, data.log.getAllEvents().findFirst().get());
 	}
 }

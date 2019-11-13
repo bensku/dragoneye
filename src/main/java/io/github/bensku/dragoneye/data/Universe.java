@@ -1,10 +1,23 @@
 package io.github.bensku.dragoneye.data;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.dizitart.no2.Nitrite;
+import org.dizitart.no2.NitriteBuilder;
+import org.dizitart.no2.mapper.JacksonMapper;
 import org.dizitart.no2.objects.ObjectRepository;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
+
+import io.github.bensku.dragoneye.data.event.EventTypes;
+import io.github.bensku.dragoneye.data.event.GameEvent;
+import io.github.bensku.dragoneye.data.event.LevelUpEvent;
+import io.github.bensku.dragoneye.data.event.TextEvent;
 
 /**
  * An universe consists of multiple {@link GameWorld}s.
@@ -12,6 +25,23 @@ import org.dizitart.no2.objects.ObjectRepository;
  *
  */
 public class Universe {
+	
+	/**
+	 * Creates an universe that stores data in given file.
+	 * @param file Database file.
+	 * @return A new universe.
+	 */
+	public static Universe openOrCreate(Path file) {
+		return new Universe(Nitrite.builder().filePath(file.toFile()));
+	}
+	
+	/**
+	 * Creates an universe that is stored in memory.
+	 * @return A new universe.
+	 */
+	public static Universe create() {
+		return new Universe(Nitrite.builder());
+	}
 
 	/**
 	 * Database backing this universe.
@@ -35,10 +65,19 @@ public class Universe {
 	
 	/**
 	 * Creates a new universe.
-	 * @param db Database to load it from.
+	 * @param builder Builder we'll use to create the database.
 	 */
-	public Universe(Nitrite db) {
-		this.db = db;
+	public Universe(NitriteBuilder builder) {
+		JacksonMapper mapper = new JacksonMapper();
+		builder.nitriteMapper(mapper);
+		
+		// Register event types to mapper we have
+		ObjectMapper objMapper = mapper.getObjectMapper();
+		for (Class<? extends GameEvent> type : EventTypes.getEventTypes()) {
+			objMapper.registerSubtypes(new NamedType(type, type.getSimpleName()));
+		}
+		
+		this.db = builder.openOrCreate();
 		this.worlds = db.getRepository(GameWorld.class);
 		this.games = db.getRepository(Game.class);
 		this.characters = db.getRepository(PlayerCharacter.class);

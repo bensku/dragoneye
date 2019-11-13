@@ -2,6 +2,9 @@ package io.github.bensku.dragoneye.data.event;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.github.bensku.dragoneye.data.Game;
 import io.github.bensku.dragoneye.data.PlayerCharacter;
 
@@ -25,6 +28,12 @@ public class LevelUpEvent extends GameEvent {
 	 * Level reached due to this event.
 	 */
 	private final int level;
+	
+	@JsonCreator
+	private LevelUpEvent(@JsonProperty("charId") int charId, @JsonProperty("level") int level) {
+		this.charId = charId;
+		this.level = level;
+	}
 	
 	public LevelUpEvent(PlayerCharacter character, int level) {
 		this.character = character;
