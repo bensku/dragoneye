@@ -13,3 +13,4 @@ Commit messages go to more detail about changes in code.
 | 2.11  | 1    | base system for game events (tests not included) |
 | 3.11  | 2    | (WIP) data storage implementation on Nitrite |
 | 5.11  | 1    | common action types, event added/removed hooks |
+| 13.11 | 2    | refactoring, testing, finding serializer bugs |
