@@ -16,6 +16,8 @@ public class EventLogTest {
 	public void simpleEvent() {
 		LevelUpEvent event = new LevelUpEvent(data.pc, 10);
 		data.log.addEvent(event);
-		assertEquals(event, data.log.getAllEvents().findFirst().get());
+		LevelUpEvent deserialized = (LevelUpEvent) data.log.getAllEvents().findFirst().get();
+		assertEquals(event, deserialized);
+		assertEquals(event.getLevel(), deserialized.getLevel());
 	}
 }
