@@ -7,6 +7,7 @@ import java.util.List;
 import org.dizitart.no2.objects.Id;
 
 import io.github.bensku.dragoneye.data.Game;
+import io.github.bensku.dragoneye.data.PlayerCharacter;
 import io.github.bensku.dragoneye.data.event.EventLog.Mutator;
 
 /**
@@ -86,6 +87,16 @@ public class GameEvent {
 	}
 	
 	/**
+	 * Called when this event is exposed from {@link EventLog}. Events may
+	 * override it to get references to shared data from given name. An example
+	 * of such data would be {@link PlayerCharacter}s.
+	 * @param game Game this event belongs to.
+	 */
+	public void inject(Game game) {
+		// No need to do that by default
+	}
+	
+	/**
 	 * Called when this event is added to an {@link EventLog}.
 	 * @param mut Mutator for event log.
 	 * @param game Game the event log is for.
@@ -93,7 +104,7 @@ public class GameEvent {
 	public void added(EventLog.Mutator mut, Game game) {
 	    game.getWorld().getCharacters().forEach(pc -> {
 	        if (pc.addXp(xp)) { // If enough XP for level up, add event for it
-	            LevelUpEvent event = new LevelUpEvent();
+	            LevelUpEvent event = new LevelUpEvent(pc, pc.getLevel());
 	            addDependentEvent(event);
 	            mut.addEvent(event);
 	        }

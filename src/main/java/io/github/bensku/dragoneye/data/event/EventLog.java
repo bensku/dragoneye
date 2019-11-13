@@ -1,6 +1,10 @@
 package io.github.bensku.dragoneye.data.event;
 
 import java.util.List;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.dizitart.no2.NitriteId;
 import org.dizitart.no2.objects.Cursor;
@@ -177,10 +181,16 @@ public class EventLog {
 	}
 	
 	/**
-	 * Return a cursor with all events.
+	 * Return an ordered stream of all game events.
 	 * @return All events.
 	 */
-	public Cursor<GameEvent> getAllEvents() {
-		return events.find();
+	public Stream<GameEvent> getAllEvents() {
+		Cursor<GameEvent> cursor = events.find();
+		Spliterator<GameEvent> spliterator = Spliterators.spliterator(cursor.iterator(), cursor.size(),
+				Spliterator.ORDERED | Spliterator.SIZED);
+		return StreamSupport.stream(spliterator, false).map(e -> {
+			e.inject(game);
+			return e;
+		});
 	}
 }

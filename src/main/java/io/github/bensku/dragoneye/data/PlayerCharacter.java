@@ -2,6 +2,8 @@ package io.github.bensku.dragoneye.data;
 
 import java.util.Objects;
 
+import org.dizitart.no2.objects.Id;
+
 /**
  * A character in game {@link GameWorld} played by player (as opposed to NPC, 
  * played by the GM).
@@ -9,6 +11,12 @@ import java.util.Objects;
  */
 public class PlayerCharacter {
 
+	/**
+	 * Unique id of this character.
+	 */
+	@Id
+	private final int id;
+	
 	/**
 	 * Name of the character.
 	 */
@@ -29,11 +37,16 @@ public class PlayerCharacter {
 	 */
 	private int levelOverride;
 	
-	public PlayerCharacter() {
+	PlayerCharacter(int id) {
+		this.id = id;
 		this.name = "";
 		this.charClass = "";
 		this.xp = 0;
 		this.levelOverride = -1;
+	}
+	
+	public int getId() {
+		return id;
 	}
 
 	public String getName() {
@@ -71,15 +84,13 @@ public class PlayerCharacter {
 	 * @return If the character leveled up.
 	 */
 	public boolean addXp(int xp) {
-	    if (xp == 0) {
+	    if (xp == 0 || levelOverride != -1) {
 	        return false; // Nothing happened
 	    }
 	    if (xp < 0) {
 	        throw new IllegalArgumentException("negative xp added");
 	    }
-	    if (levelOverride != -1) {
-	        throw new IllegalArgumentException("level is overridden");
-	    }
+	    
 	    int oldLevel = computeLevel();
 	    setXp(getXp() + xp);
 	    int newLevel = computeLevel();
@@ -141,5 +152,18 @@ public class PlayerCharacter {
 	 */
 	public void removeLevelOverride() {
 		levelOverride = -1;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof PlayerCharacter)) {
+			return false;
+		}
+		return ((PlayerCharacter) o).id == this.id;
+	}
+	
+	@Override
+	public int hashCode() {
+		return id;
 	}
 }

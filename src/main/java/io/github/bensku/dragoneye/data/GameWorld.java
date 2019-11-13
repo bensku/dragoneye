@@ -1,12 +1,17 @@
 package io.github.bensku.dragoneye.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.dizitart.no2.Nitrite;
+import org.dizitart.no2.NitriteId;
+import org.dizitart.no2.objects.Cursor;
 import org.dizitart.no2.objects.Id;
 import org.dizitart.no2.objects.ObjectRepository;
 
@@ -31,9 +36,9 @@ public class GameWorld {
 	private String name;
 	
 	/**
-	 * Player characters in this world.
+	 * The universe in which this world is in.
 	 */
-	private final List<PlayerCharacter> characters;
+	transient Universe universe;
 	
 	/**
 	 * Backing database.
@@ -41,14 +46,22 @@ public class GameWorld {
 	transient Nitrite db;
 	
 	/**
+	 * Player characters in this world.
+	 */
+	transient ObjectRepository<PlayerCharacter> characters;
+	
+	/**
 	 * Games played in this world.
 	 */
 	transient ObjectRepository<Game> games;
 	
-	GameWorld(int id) {
-		this.index = id;
+	GameWorld(int index) {
+		this.index = index;
 		this.name = "";
-		this.characters = new ArrayList<>();
+	}
+	
+	public Universe getUniverse() {
+		return universe;
 	}
 
 	public String getName() {
@@ -61,12 +74,33 @@ public class GameWorld {
 	}
 
 	/**
-	 * Gets player characters in this game world. The returned list is mutable.
-	 * If it is change, remember to {@link Universe#updateworld(GameWorld)}!
+	 * Gets player characters in this game world.
 	 * @return Player characters.
 	 */
-	public List<PlayerCharacter> getCharacters() {
-		return characters;
+	public Cursor<PlayerCharacter> getCharacters() {
+		return characters.find();
+	}
+	
+	public PlayerCharacter getCharacter(int id) {
+		return characters.getById(NitriteId.createId((long) id));
+	}
+	
+	/**
+	 * Creates a new character.
+	 * @return A new character.
+	 */
+	public PlayerCharacter createCharacter() {
+		PlayerCharacter pc = new PlayerCharacter((int) characters.size());
+		characters.insert(pc);
+		return pc;
+	}
+	
+	/**
+	 * Updates an existing character.
+	 * @param pc Existing character.
+	 */
+	public void updateCharacter(PlayerCharacter pc) {
+		characters.update(pc);
 	}
 	
 	/**

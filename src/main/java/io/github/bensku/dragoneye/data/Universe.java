@@ -38,7 +38,9 @@ public class Universe {
 	 * @return The given world.
 	 */
 	private GameWorld injectWorld(GameWorld world) {
+		world.universe = this;
 		world.db = db;
+		world.characters = db.getRepository("characters-" + world.index, PlayerCharacter.class);
 		world.games = db.getRepository("games-" + world.index, Game.class);
 		return world;
 	}
