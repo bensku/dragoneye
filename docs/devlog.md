@@ -14,3 +14,4 @@ Commit messages go to more detail about changes in code.
 | 3.11  | 2    | (WIP) data storage implementation on Nitrite |
 | 5.11  | 1    | common action types, event added/removed hooks |
 | 13.11 | 2    | refactoring, testing, finding serializer bugs |
+|       | 2    | blocking data storage improvements |
