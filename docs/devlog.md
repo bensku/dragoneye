@@ -15,3 +15,4 @@ Commit messages go to more detail about changes in code.
 | 5.11  | 1    | common action types, event added/removed hooks |
 | 13.11 | 2    | refactoring, testing, finding serializer bugs |
 |       | 2    | blocking data storage improvements |
+| 24.11 | 2    | GUI experimentation |
