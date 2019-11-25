@@ -16,3 +16,4 @@ Commit messages go to more detail about changes in code.
 | 13.11 | 2    | refactoring, testing, finding serializer bugs |
 |       | 2    | blocking data storage improvements |
 | 24.11 | 2    | GUI experimentation |
+| 25.11 | 1.5  | draft of world select screen |
