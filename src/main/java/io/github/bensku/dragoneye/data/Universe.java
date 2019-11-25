@@ -1,6 +1,5 @@
 package io.github.bensku.dragoneye.data;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -11,13 +10,10 @@ import org.dizitart.no2.mapper.JacksonMapper;
 import org.dizitart.no2.objects.ObjectRepository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
 
 import io.github.bensku.dragoneye.data.event.EventTypes;
 import io.github.bensku.dragoneye.data.event.GameEvent;
-import io.github.bensku.dragoneye.data.event.LevelUpEvent;
-import io.github.bensku.dragoneye.data.event.TextEvent;
 
 /**
  * An universe consists of multiple {@link GameWorld}s.
@@ -119,5 +115,15 @@ public class Universe {
 	 */
 	public void updateWorld(GameWorld world) {
 		worlds.update(world);
+	}
+	
+	/**
+	 * Removes a world from the database.
+	 * @param world World to delete.
+	 * @param world
+	 */
+	public void removeWorld(GameWorld world) {
+		worlds.remove(world);
+		// TODO we need to clean up associated data
 	}
 }

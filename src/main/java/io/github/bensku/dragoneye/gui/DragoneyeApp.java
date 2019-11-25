@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.github.bensku.dragoneye.data.Universe;
+import io.github.bensku.dragoneye.gui.model.WorldListModel;
 import io.github.bensku.dragoneye.gui.view.WorldSelectView;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -29,7 +30,7 @@ public class DragoneyeApp extends Application {
 	@Override
 	public void start(Stage stage) {
 		try {
-			WorldSelectView view = new WorldSelectView(universe);
+			WorldSelectView view = new WorldSelectView(new WorldListModel(universe));
 			stage.setScene(new Scene(view));
 			stage.show();
 			
