@@ -17,3 +17,4 @@ Commit messages go to more detail about changes in code.
 |       | 2    | blocking data storage improvements |
 | 24.11 | 2    | GUI experimentation |
 | 25.11 | 1.5  | draft of world select screen |
+| 26.11 | 1.5  | game creation/selection UI |

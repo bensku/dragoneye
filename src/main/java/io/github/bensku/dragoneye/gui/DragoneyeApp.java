@@ -3,8 +3,13 @@ package io.github.bensku.dragoneye.gui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.github.bensku.dragoneye.data.Game;
+import io.github.bensku.dragoneye.data.GameWorld;
 import io.github.bensku.dragoneye.data.Universe;
+import io.github.bensku.dragoneye.gui.model.GameListModel;
 import io.github.bensku.dragoneye.gui.model.WorldListModel;
+import io.github.bensku.dragoneye.gui.view.GameSelectView;
+import io.github.bensku.dragoneye.gui.view.RootView;
 import io.github.bensku.dragoneye.gui.view.WorldSelectView;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -23,15 +28,21 @@ public class DragoneyeApp extends Application {
 	 */
 	private final Universe universe;
 	
+	/**
+	 * Root view.
+	 */
+	private final RootView rootView;
+	
 	public DragoneyeApp(Universe universe) {
 		this.universe = universe;
+		this.rootView = new RootView();
 	}
 
 	@Override
 	public void start(Stage stage) {
 		try {
-			WorldSelectView view = new WorldSelectView(new WorldListModel(universe));
-			stage.setScene(new Scene(view));
+			openWorldSelect(universe);
+			stage.setScene(new Scene(rootView));
 			stage.show();
 			
 			// Startup is done, we should now be able to handle crashes
@@ -43,6 +54,18 @@ public class DragoneyeApp extends Application {
 				handleCrash(Thread.currentThread(), e);
 			});
 		}
+	}
+	
+	private void openWorldSelect(Universe universe) {
+		rootView.open("Select a world", new WorldSelectView(new WorldListModel(universe), this::openGameSelect));
+	}
+	
+	private void openGameSelect(GameWorld world) {
+		rootView.open("Select a game", new GameSelectView(new GameListModel(world), this::openGame));
+	}
+	
+	private void openGame(Game game) {
+		// TODO implement game event-log view
 	}
 
 	/**

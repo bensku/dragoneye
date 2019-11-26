@@ -1,6 +1,7 @@
 package io.github.bensku.dragoneye.gui.view;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import io.github.bensku.dragoneye.data.GameWorld;
 import io.github.bensku.dragoneye.gui.controller.WorldEditController;
@@ -10,6 +11,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.MouseButton;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListCell;
@@ -32,7 +34,7 @@ public class WorldSelectView extends BorderPane {
 	 */
 	private final WorldListModel worldList;
 	
-	public WorldSelectView(WorldListModel worldList) {
+	public WorldSelectView(WorldListModel worldList, Consumer<GameWorld> openHandler) {
 		this.worldList = worldList;
 		
 		this.listView = new ListView<>(worldList.getWorlds());
@@ -49,6 +51,7 @@ public class WorldSelectView extends BorderPane {
 		setCenter(listView);
 		setBottom(buttons);
 		
+		// Creating, editing (name, characters) and deleting worlds
 		createWorld.setOnAction(e -> createWorld());
 		editWorld.setOnAction(e -> {
 			GameWorld selected = listView.getSelectionModel().getSelectedItem();
@@ -72,6 +75,16 @@ public class WorldSelectView extends BorderPane {
 			}
 			
 			worldList.getWorlds().remove(selected);
+		});
+		
+		// Opening worlds (list of games in them)
+		listView.setOnMouseClicked(e -> {
+			if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
+				GameWorld world = listView.getSelectionModel().getSelectedItem();
+				if (world != null) {
+					openHandler.accept(world);
+				}
+			}
 		});
 	}
 	
@@ -136,4 +149,5 @@ public class WorldSelectView extends BorderPane {
 			listView.refresh(); // Update shown list too
 		}
 	}
+	
 }
