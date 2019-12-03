@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 
 /**
  * Shows last added view, but keeps track of previous views so the user can go
@@ -41,9 +42,12 @@ public class RootView extends BorderPane {
 		backButton.setOnAction(e -> back());
 		
 		Label titleLabel = new Label();
+		titleLabel.setFont(Font.font(20));
 		this.title = titleLabel.textProperty();
 		
-		HBox topRow = new HBox(backButton, titleLabel);
+		BorderPane topRow = new BorderPane();
+		topRow.setLeft(backButton);
+		topRow.setCenter(titleLabel);
 		setTop(topRow);
 	}
 	

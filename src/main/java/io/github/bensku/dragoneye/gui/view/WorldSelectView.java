@@ -68,7 +68,7 @@ public class WorldSelectView extends BorderPane {
 			// Ask for confirmation
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("Delete world?");
-			alert.setContentText("All data in the world be permanently lost.");
+			alert.setContentText("All data in the world will be permanently lost.");
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.isEmpty() || !result.get().equals(ButtonType.OK) ) {
 				return; // User didn't confirm deletion
