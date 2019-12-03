@@ -6,8 +6,11 @@ import org.slf4j.LoggerFactory;
 import io.github.bensku.dragoneye.data.Game;
 import io.github.bensku.dragoneye.data.GameWorld;
 import io.github.bensku.dragoneye.data.Universe;
+import io.github.bensku.dragoneye.data.event.EventLog;
 import io.github.bensku.dragoneye.gui.model.GameListModel;
 import io.github.bensku.dragoneye.gui.model.WorldListModel;
+import io.github.bensku.dragoneye.gui.view.EventListView;
+import io.github.bensku.dragoneye.gui.view.GameRootView;
 import io.github.bensku.dragoneye.gui.view.GameSelectView;
 import io.github.bensku.dragoneye.gui.view.RootView;
 import io.github.bensku.dragoneye.gui.view.WorldSelectView;
@@ -65,7 +68,11 @@ public class DragoneyeApp extends Application {
 	}
 	
 	private void openGame(Game game) {
-		// TODO implement game event-log view
+		EventLog log = game.getEventLog();
+		EventListView eventList = new EventListView(log);
+		// TODO register event types
+		eventList.initialize();
+		rootView.open("Game " + game.getCreationTime().toString(), new GameRootView(eventList));
 	}
 
 	/**
@@ -78,8 +85,8 @@ public class DragoneyeApp extends Application {
 		e.printStackTrace(); // TODO remove, gate behind system property?
 		
 		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Dragoneye crash");
-		alert.setContentText("Dragoneye has crashed due to a critical error!");
+		alert.setTitle("Dragoneye: Critical Error");
+		alert.setContentText("Dragoneye has encountered a critical error and must be closed.");
 		alert.showAndWait();
 		
 		System.exit(1);

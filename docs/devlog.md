@@ -19,3 +19,4 @@ Commit messages go to more detail about changes in code.
 | 25.11 | 1.5  | draft of world select screen |
 | 26.11 | 1.5  | game creation/selection UI |
 | 3.12  | 1    | planning and experimenting with event log display |
+|       | 1    | implementing MVP event log display |

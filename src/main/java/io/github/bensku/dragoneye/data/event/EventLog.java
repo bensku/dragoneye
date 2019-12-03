@@ -1,8 +1,12 @@
 package io.github.bensku.dragoneye.data.event;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Spliterator;
 import java.util.Spliterators;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -31,6 +35,12 @@ public class EventLog {
 	 */
 	public class Mutator {
 		
+		private void notifyListeners(GameEvent event, BiConsumer<ChangeListener, GameEvent> func) {
+			for (ChangeListener listener : changeListeners) {
+				func.accept(listener, event);
+			}
+		}
+		
 		/**
 		 * Adds a game event to log.
 		 * @param event Event to add.
@@ -39,6 +49,7 @@ public class EventLog {
 			event.setLogIndexInternal(nextEvent++);
 			event.added(this, game); // Let event to mutate log
 			events.insert(event);
+			notifyListeners(event, ChangeListener::added);
 		}
 		
 		/**
@@ -52,6 +63,7 @@ public class EventLog {
 			event.setLogIndexInternal(-1); // Not in log anymore
 			event.removed(this, game); // Let event to mutate log
 			events.remove(event);
+			notifyListeners(event, ChangeListener::removed);
 		}
 		
 		/**
@@ -60,6 +72,7 @@ public class EventLog {
 		 */
 		public void updateEvent(GameEvent event) {
 			events.update(event);
+			notifyListeners(event, ChangeListener::updated);
 			// With updates, we do not allow events to mutate log
 			// Unless UI allows updates to XP, this shouldn't be a big deal
 			// (GM retroactively changing XP is seldom a good idea, anyway)
@@ -99,6 +112,36 @@ public class EventLog {
 	 */
 	private int nextEvent;
 	
+	/**
+	 * A listener for changes in event log.
+	 *
+	 */
+	public interface ChangeListener {
+		
+		/**
+		 * Called after an event has been added.
+		 * @param event Event that was just added to log.
+		 */
+		void added(GameEvent event);
+		
+		/**
+		 * Called after an event has been removed.
+		 * @param event Event that was just removed from log.
+		 */
+		void removed(GameEvent event);
+		
+		/**
+		 * Called when an event is updated.
+		 * @param event Event that was updated and is in log.
+		 */
+		void updated(GameEvent event);
+	}
+	
+	/**
+	 * Change listeners.
+	 */
+	private final List<ChangeListener> changeListeners;
+	
 	public EventLog(Game game, List<LogAction> actions, int lastAction, ObjectRepository<GameEvent> events) {
 		this.game = game;
 		this.mutator = new Mutator();
@@ -106,6 +149,7 @@ public class EventLog {
 		this.lastAction = lastAction;
 		this.events = events;
 		this.nextEvent = (int) events.size(); // Won't ever have more than 2^31-1 events
+		this.changeListeners = new ArrayList<>();
 	}
 	
 	/**
@@ -192,5 +236,13 @@ public class EventLog {
 			e.inject(game);
 			return e;
 		});
+	}
+	
+	/**
+	 * Registers a new change listener.
+	 * @param listener Change listener.
+	 */
+	public void registerListener(ChangeListener listener) {
+		changeListeners.add(listener);
 	}
 }

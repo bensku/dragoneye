@@ -8,5 +8,7 @@ import javafx.scene.layout.BorderPane;
  */
 public class GameRootView extends BorderPane {
 
-	
+	public GameRootView(EventListView eventList) {
+		setCenter(eventList);
+	}
 }
