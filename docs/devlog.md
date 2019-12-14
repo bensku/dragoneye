@@ -20,3 +20,4 @@ Commit messages go to more detail about changes in code.
 | 26.11 | 1.5  | game creation/selection UI |
 | 3.12  | 1    | planning and experimenting with event log display |
 |       | 1    | implementing MVP event log display |
+| 14.12 | 2    | partially implementing event addition controls |

@@ -1,5 +1,6 @@
 package io.github.bensku.dragoneye.gui.view;
 
+import io.github.bensku.dragoneye.gui.controller.CreateEventController;
 import javafx.scene.layout.BorderPane;
 
 /**
@@ -8,7 +9,8 @@ import javafx.scene.layout.BorderPane;
  */
 public class GameRootView extends BorderPane {
 
-	public GameRootView(EventListView eventList) {
+	public GameRootView(EventListView eventList, CreateEventController createController) {
 		setCenter(eventList);
+		setBottom(createController);
 	}
 }

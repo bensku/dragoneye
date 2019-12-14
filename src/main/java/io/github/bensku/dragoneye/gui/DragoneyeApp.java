@@ -7,6 +7,8 @@ import io.github.bensku.dragoneye.data.Game;
 import io.github.bensku.dragoneye.data.GameWorld;
 import io.github.bensku.dragoneye.data.Universe;
 import io.github.bensku.dragoneye.data.event.EventLog;
+import io.github.bensku.dragoneye.data.event.TextEvent;
+import io.github.bensku.dragoneye.gui.controller.CreateEventController;
 import io.github.bensku.dragoneye.gui.model.GameListModel;
 import io.github.bensku.dragoneye.gui.model.WorldListModel;
 import io.github.bensku.dragoneye.gui.view.EventListView;
@@ -19,6 +21,8 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -68,11 +72,23 @@ public class DragoneyeApp extends Application {
 	}
 	
 	private void openGame(Game game) {
+		// Event list
 		EventLog log = game.getEventLog();
 		EventListView eventList = new EventListView(log);
 		// TODO register event types
+		eventList.addType(TextEvent.class, event -> new Label(event.getText()));
 		eventList.initialize();
-		rootView.open("Game " + game.getCreationTime().toString(), new GameRootView(eventList));
+		
+		// Event creation tools
+		CreateEventController createController = CreateEventController.builder()
+				.eventType()
+						.button(new RadioButton("Text"))
+						.constructor(details -> details.isEmpty() ? null : new TextEvent(details))
+						.finish()
+				.eventListener(log::addEvent)
+				.build();
+		
+		rootView.open("Game " + game.getCreationTime().toString(), new GameRootView(eventList, createController));
 	}
 
 	/**
