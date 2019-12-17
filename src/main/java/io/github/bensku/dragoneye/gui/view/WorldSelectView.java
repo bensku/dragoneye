@@ -16,9 +16,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -122,24 +125,31 @@ public class WorldSelectView extends BorderPane {
 		Stage stage = new Stage();
 		stage.initModality(Modality.APPLICATION_MODAL);
 		GridPane pane = new GridPane();
-		stage.setScene(new Scene(pane));
+		stage.setScene(new Scene(pane, 500, 500));
 		
 		// World editor
 		WorldEditController editor = new WorldEditController(world);
-		pane.add(editor, 0, 0, 3, 1);
+		ScrollPane editorContainer = new ScrollPane(editor);
+		editor.prefWidthProperty().bind(editorContainer.widthProperty().subtract(18));
+		pane.add(editorContainer, 0, 0, 3, 1);
+		GridPane.setHgrow(editorContainer, Priority.ALWAYS);
 		
 		// Buttons to cancel/save changes
 		Button cancelButton = new Button("Cancel");
+		cancelButton.setPrefWidth(Double.MAX_VALUE);
 		cancelButton.setOnAction(e -> stage.close());
 		pane.add(cancelButton, 1, 2);
 		
 		Button saveButton = new Button("Save");
+		saveButton.setPrefWidth(Double.MAX_VALUE);
 		BooleanProperty saving = new SimpleBooleanProperty();
 		saveButton.setOnAction(e -> {
 			saving.set(true);
 			stage.close();
 		});
 		pane.add(saveButton, 2, 2);
+		
+		pane.getColumnConstraints().addAll(new ColumnConstraints(0, 360, Double.MAX_VALUE), new ColumnConstraints(70), new ColumnConstraints(70));
 		
 		stage.showAndWait();
 		

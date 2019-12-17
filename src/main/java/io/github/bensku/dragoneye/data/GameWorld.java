@@ -89,6 +89,14 @@ public class GameWorld {
 	}
 	
 	/**
+	 * Removes a character.
+	 * @param pc Existing character.
+	 */
+	public void removeCharacter(PlayerCharacter pc) {
+		universe.characters.remove(pc);
+	}
+	
+	/**
 	 * Injects transient data to a game.
 	 * @param game Game to inject.
 	 * @return The given game.

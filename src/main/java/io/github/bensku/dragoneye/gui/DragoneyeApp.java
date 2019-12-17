@@ -49,8 +49,7 @@ public class DragoneyeApp extends Application {
 	public void start(Stage stage) {
 		try {
 			openWorldSelect(universe);
-			Scene scene = new Scene(rootView, 900, 620);
-			stage.setScene(scene);
+			stage.setScene(new Scene(rootView, 900, 620));
 			stage.show();
 			
 			// Startup is done, we should now be able to handle crashes
