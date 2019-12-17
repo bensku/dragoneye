@@ -49,7 +49,8 @@ public class DragoneyeApp extends Application {
 	public void start(Stage stage) {
 		try {
 			openWorldSelect(universe);
-			stage.setScene(new Scene(rootView));
+			Scene scene = new Scene(rootView, 900, 620);
+			stage.setScene(scene);
 			stage.show();
 			
 			// Startup is done, we should now be able to handle crashes
@@ -75,20 +76,26 @@ public class DragoneyeApp extends Application {
 		// Event list
 		EventLog log = game.getEventLog();
 		EventListView eventList = new EventListView(log);
-		// TODO register event types
-		eventList.addType(TextEvent.class, event -> new Label(event.getText()));
+		eventList.addType(TextEvent.class, EventRenderers::textEvent);
 		eventList.initialize();
 		
 		// Event creation tools
 		CreateEventController createController = CreateEventController.builder()
 				.eventType()
-						.button(new RadioButton("Text"))
-						.constructor(details -> details.isEmpty() ? null : new TextEvent(details))
+						.button(makeSneakyRadioButton("Text"))
+						.constructor((details, xp) -> details.isEmpty() ? null : new TextEvent(details, xp))
 						.finish()
 				.eventListener(log::addEvent)
 				.build();
 		
 		rootView.open("Game " + game.getCreationTime().toString(), new GameRootView(eventList, createController));
+	}
+	
+	private RadioButton makeSneakyRadioButton(String label) {
+		RadioButton button = new RadioButton(label);
+		button.getStyleClass().remove("radio-button");
+		button.getStyleClass().add("toggle-button");
+		return button;
 	}
 
 	/**

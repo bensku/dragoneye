@@ -15,7 +15,8 @@ public class TextEvent extends GameEvent {
 	private final String text;
 	
 	@JsonCreator
-	public TextEvent(@JsonProperty("text") String text) {
+	public TextEvent(@JsonProperty("text") String text, @JsonProperty("xp") int xp) {
+		super(xp);
 		this.text = text;
 	}
 
