@@ -11,12 +11,15 @@ import io.github.bensku.dragoneye.data.event.GameEvent;
 import io.github.bensku.dragoneye.gui.controller.CreateEventController.Builder.TypeBuilder;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -171,14 +174,21 @@ public class CreateEventController extends GridPane {
 	private CreateEventController(List<TypeBuilder> types, List<Consumer<GameEvent>> listeners) {
 		this.listeners = listeners;
 		this.currentConstructor = new SimpleObjectProperty<>();
-		
-		int detailsHeight = 90;
-		
+				
 		// Details text area
 		this.detailsField = new TextArea();
 		detailsField.setPromptText("Event description...");
+		// Capture tab in field to transfer control to next field (very hacky!)
+		detailsField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+			if (event.getCode() == KeyCode.TAB && !event.isShiftDown() && !event.isControlDown()) {
+				event.consume();
+				Node source = (Node) event.getSource();
+				source.fireEvent(new KeyEvent(source, event.getTarget(), event.getEventType(),
+						event.getCharacter(), event.getText(), event.getCode(),
+						event.isShiftDown(), true, event.isAltDown(), event.isMetaDown()));
+			}
+		});
 		add(detailsField, 0, 0, 1, 2);
-		//detailsField.setPrefSize(Double.MAX_VALUE, detailsHeight);
 		GridPane.setHgrow(detailsField, Priority.ALWAYS);
 		
 		// XP input field
