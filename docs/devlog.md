@@ -21,3 +21,6 @@ Commit messages go to more detail about changes in code.
 | 3.12  | 1    | planning and experimenting with event log display |
 |       | 1    | implementing MVP event log display |
 | 14.12 | 2    | partially implementing event addition controls |
+| 17.12 | 1.5  | improving UX of game view |
+|       | 1    | implementing event XP in UI |
+|       | 1    | creating character editor in world settings |
