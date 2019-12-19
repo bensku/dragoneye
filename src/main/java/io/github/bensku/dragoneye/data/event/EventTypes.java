@@ -58,5 +58,7 @@ public class EventTypes {
 	static {
 		registerEvent(LevelUpEvent.class);
 		registerEvent(TextEvent.class);
+		registerEvent(CombatEvent.class);
+		registerEvent(RestEvent.class);
 	}
 }

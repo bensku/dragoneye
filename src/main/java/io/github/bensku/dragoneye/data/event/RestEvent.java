@@ -1,5 +1,7 @@
 package io.github.bensku.dragoneye.data.event;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -26,4 +28,25 @@ public class RestEvent extends GameEvent {
 	public Kind getKind() {
 		return kind;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(kind);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RestEvent other = (RestEvent) obj;
+		return kind == other.kind;
+	}
+	
 }

@@ -54,4 +54,30 @@ public class LevelUpEvent extends GameEvent {
 	public void inject(Game game) {
 		character = game.getWorld().getCharacter(charId);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(charId, level);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LevelUpEvent other = (LevelUpEvent) obj;
+		return charId == other.charId && level == other.level;
+	}
+
+	@Override
+	public String toString() {
+		return "LevelUpEvent [charId=" + charId + ", level=" + level + "]";
+	}
+	
 }

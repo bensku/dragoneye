@@ -20,6 +20,8 @@ public class TestData {
 		this.universe = Universe.create();
 		this.world = universe.createWorld();
 		this.pc = world.createCharacter();
+		pc.addXp(10_000_000); // To level 20
+		world.updateCharacter(pc);
 		this.game = world.createGame();
 		this.log = game.getEventLog();
 	}
