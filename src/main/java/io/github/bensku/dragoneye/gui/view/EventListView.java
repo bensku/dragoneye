@@ -42,6 +42,7 @@ public class EventListView extends BorderPane {
 		public void added(GameEvent event) {
 			checkInitialize(true);
 			eventsView.getItems().add(event);
+			eventsView.scrollTo(eventsView.getItems().size() - 1); // Scroll to event that was just added
 		}
 
 		@Override
@@ -108,6 +109,7 @@ public class EventListView extends BorderPane {
 		eventsView.setCellFactory(view -> new EventCell());
 		this.renderers = new HashMap<>();
 		
+		// Prevent selecting events from ListView by replacing selection model
 		eventsView.setSelectionModel(new MultipleSelectionModel<GameEvent>() {
 			
 			@Override

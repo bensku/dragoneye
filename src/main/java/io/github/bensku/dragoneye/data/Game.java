@@ -4,6 +4,9 @@ import java.time.Instant;
 
 import org.dizitart.no2.objects.Id;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.github.bensku.dragoneye.data.event.EventLog;
 
 /**
@@ -38,7 +41,8 @@ public class Game {
 	 */
 	transient EventLog events;
 	
-	Game(int worldId, int id) {
+	@JsonCreator
+	Game(@JsonProperty("worldId") int worldId, @JsonProperty("id") int id) {
 		this.worldId = worldId;
 		this.index = id;
 		this.creationTime = System.currentTimeMillis();

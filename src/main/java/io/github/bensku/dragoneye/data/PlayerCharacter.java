@@ -20,6 +20,7 @@ public class PlayerCharacter {
 	/**
 	 * Id of world this character belongs to.
 	 */
+	@SuppressWarnings("unused") // Used for Nitrite queries
 	private final int worldId;
 	
 	/**

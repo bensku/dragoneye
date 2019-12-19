@@ -6,7 +6,10 @@ import org.slf4j.LoggerFactory;
 import io.github.bensku.dragoneye.data.Game;
 import io.github.bensku.dragoneye.data.GameWorld;
 import io.github.bensku.dragoneye.data.Universe;
+import io.github.bensku.dragoneye.data.event.CombatEvent;
 import io.github.bensku.dragoneye.data.event.EventLog;
+import io.github.bensku.dragoneye.data.event.LevelUpEvent;
+import io.github.bensku.dragoneye.data.event.RestEvent;
 import io.github.bensku.dragoneye.data.event.TextEvent;
 import io.github.bensku.dragoneye.gui.controller.CreateEventController;
 import io.github.bensku.dragoneye.gui.model.GameListModel;
@@ -21,7 +24,6 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -76,6 +78,9 @@ public class DragoneyeApp extends Application {
 		EventLog log = game.getEventLog();
 		EventListView eventList = new EventListView(log);
 		eventList.addType(TextEvent.class, EventRenderers::textEvent);
+		eventList.addType(LevelUpEvent.class, EventRenderers::levelUpEvent);
+		eventList.addType(RestEvent.class, EventRenderers::restEvent);
+		eventList.addType(CombatEvent.class, EventRenderers::combatEvent);
 		eventList.initialize();
 		
 		// Event creation tools
@@ -83,6 +88,20 @@ public class DragoneyeApp extends Application {
 				.eventType()
 						.button(makeSneakyRadioButton("Text"))
 						.constructor((details, xp) -> details.isEmpty() ? null : new TextEvent(details, xp))
+						.finish()
+				.eventType()
+						.button(makeSneakyRadioButton("Combat"))
+						.constructor((details, xp) -> new CombatEvent(details, xp))
+						.finish()
+				.eventType()
+						.button(makeSneakyRadioButton("Short rest"))
+						.constructor((details, xp) -> new RestEvent(RestEvent.Kind.SHORT))
+						.activateImmediately()
+						.finish()
+				.eventType()
+						.button(makeSneakyRadioButton("Long rest"))
+						.constructor((details, xp) -> new RestEvent(RestEvent.Kind.LONG))
+						.activateImmediately()
 						.finish()
 				.eventListener(log::addEvent)
 				.build();

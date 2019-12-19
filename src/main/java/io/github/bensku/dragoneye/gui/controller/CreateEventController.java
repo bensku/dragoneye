@@ -9,7 +9,9 @@ import java.util.function.Consumer;
 
 import io.github.bensku.dragoneye.data.event.GameEvent;
 import io.github.bensku.dragoneye.gui.controller.CreateEventController.Builder.TypeBuilder;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -45,6 +47,8 @@ public class CreateEventController extends GridPane {
 			
 			private RadioButton button;
 			
+			private boolean activateImmediately;
+			
 			private Set<KeyCombination> shortcuts;
 			
 			private BiFunction<String, Integer, ? extends GameEvent> constructor;
@@ -63,6 +67,16 @@ public class CreateEventController extends GridPane {
 			 */
 			public TypeBuilder button(RadioButton button) {
 				this.button = button;
+				return this;
+			}
+			
+			/**
+			 * Log the event immediately when button or keybind is pressed,
+			 * instead of waiting the user to submit it.
+			 * @return This builder.
+			 */
+			public TypeBuilder activateImmediately() {
+				this.activateImmediately = true;
 				return this;
 			}
 			
@@ -152,6 +166,29 @@ public class CreateEventController extends GridPane {
 	}
 	
 	/**
+	 * User action, such as button press or keybind use info.
+	 *
+	 */
+	private static class ActionInfo {
+		
+		/**
+		 * Constructor that makes the event
+		 */
+		public final BiFunction<String, Integer, ? extends GameEvent> constructor;
+		
+		/**
+		 * See {@link TypeBuilder#activateImmediately()}.
+		 */
+		public final boolean activateImmediately;
+
+		private ActionInfo(BiFunction<String, Integer, ? extends GameEvent> constructor, boolean activateImmediately) {
+			this.constructor = constructor;
+			this.activateImmediately = activateImmediately;
+		}
+		
+	}
+	
+	/**
 	 * Details text field.
 	 */
 	private final TextArea detailsField;
@@ -167,13 +204,13 @@ public class CreateEventController extends GridPane {
 	private final List<Consumer<GameEvent>> listeners;
 	
 	/**
-	 * Current game event constructor.
+	 * Current game event information we need to fire it.
 	 */
-	private final ObjectProperty<BiFunction<String, Integer, GameEvent>> currentConstructor;
+	private final ObjectProperty<ActionInfo> currentEvent;
 
 	private CreateEventController(List<TypeBuilder> types, List<Consumer<GameEvent>> listeners) {
 		this.listeners = listeners;
-		this.currentConstructor = new SimpleObjectProperty<>();
+		this.currentEvent = new SimpleObjectProperty<>();
 				
 		// Details text area
 		this.detailsField = new TextArea();
@@ -204,11 +241,11 @@ public class CreateEventController extends GridPane {
 		submitButton.setFont(new Font(30));
 		submitButton.setPrefHeight(Double.MAX_VALUE);
 		submitButton.setPrefWidth(Double.MAX_VALUE);
-		submitButton.setOnAction(e -> createEvent());
+		submitButton.setOnAction(e -> createEvent(currentEvent.get()));
 		add(submitButton, 1, 1, 1, 2);
 		
 		// Disable submit button if we don't have a type selected
-		submitButton.disableProperty().bind(currentConstructor.isNull());
+		submitButton.disableProperty().bind(currentEvent.isNull());
 		
 		// Event type selection buttons
 		ToggleGroup typeGroup = new ToggleGroup();
@@ -219,7 +256,7 @@ public class CreateEventController extends GridPane {
 				button.setPrefHeight(Double.MAX_VALUE);
 				button.setPrefWidth(10_000);
 				button.setToggleGroup(typeGroup);
-				button.setUserData(type.constructor);
+				button.setUserData(new ActionInfo(type.constructor, type.activateImmediately));
 				typeButtons.getChildren().add(button);
 			}
 		}
@@ -230,11 +267,23 @@ public class CreateEventController extends GridPane {
 		getColumnConstraints().addAll(new ColumnConstraints(300, 500, Double.MAX_VALUE), new ColumnConstraints(130));
 		
 		// Change constructor based on changes in UI
+		BooleanProperty nestedToggle = new SimpleBooleanProperty(false);
 		typeGroup.selectedToggleProperty().addListener((group, oldValue, newValue) -> {
+			if (nestedToggle.get()) {
+				return;
+			}
 			if (newValue != null) {
-				currentConstructor.set((BiFunction<String, Integer, GameEvent>) newValue.getUserData());
+				ActionInfo info = (ActionInfo) newValue.getUserData();
+				if (info.activateImmediately) { // Fire this event immediately
+					createEvent(info);
+					nestedToggle.set(true); // Ensure we're not calling us over and over
+					typeGroup.selectToggle(oldValue);
+					nestedToggle.set(false);
+				} else { // User can fire the event when they want to
+					currentEvent.set(info);
+				}
 			} else {
-				currentConstructor.set(null);
+				currentEvent.set(null);
 			}
 		});
 		
@@ -244,11 +293,11 @@ public class CreateEventController extends GridPane {
 		// TODO implement shortcuts
 	}
 	
-	private void createEvent() {
-		if (currentConstructor.get() == null) {
+	private void createEvent(ActionInfo info) {
+		if (info == null) {
 			return; // Nothing to do
 		}
-		GameEvent event = currentConstructor.get().apply(detailsField.getText(), parseXp(xpField.getText()));
+		GameEvent event = info.constructor.apply(detailsField.getText(), parseXp(xpField.getText()));
 		if (event != null) {
 			// Clear details; that data went to event already
 			detailsField.clear();

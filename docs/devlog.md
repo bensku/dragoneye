@@ -24,3 +24,4 @@ Commit messages go to more detail about changes in code.
 | 17.12 | 1.5  | improving UX of game view |
 |       | 1    | implementing event XP in UI |
 |       | 1    | creating character editor in world settings |
+| 19.12 | 1    | add support for all required event types |

@@ -10,6 +10,8 @@ import org.dizitart.no2.objects.Cursor;
 import org.dizitart.no2.objects.Id;
 import org.dizitart.no2.objects.filters.ObjectFilters;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.github.bensku.dragoneye.data.event.EventLog;
 import io.github.bensku.dragoneye.data.event.GameEvent;
 
@@ -40,7 +42,7 @@ public class GameWorld {
 	 */
 	transient Nitrite db;
 	
-	GameWorld(int index) {
+	GameWorld(@JsonProperty("id") int index) {
 		this.id = index;
 		this.name = "";
 	}

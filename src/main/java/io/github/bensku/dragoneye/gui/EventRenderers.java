@@ -1,5 +1,8 @@
 package io.github.bensku.dragoneye.gui;
 
+import io.github.bensku.dragoneye.data.event.CombatEvent;
+import io.github.bensku.dragoneye.data.event.LevelUpEvent;
+import io.github.bensku.dragoneye.data.event.RestEvent;
 import io.github.bensku.dragoneye.data.event.TextEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
@@ -26,6 +29,25 @@ public class EventRenderers {
 
 	public static Parent textEvent(TextEvent event) {
 		BorderPane pane = newFrame(Color.CORNSILK);
+		pane.setLeft(new Label(event.getText()));
+		pane.setRight(new Label("+" + event.getXp() + " xp"));
+		return pane;
+	}
+	
+	public static Parent levelUpEvent(LevelUpEvent event) {
+		BorderPane pane = newFrame(Color.AQUAMARINE);
+		pane.setLeft(new Label(event.getCharacter().getName() + " levels up!"));
+		return pane;
+	}
+	
+	public static Parent restEvent(RestEvent event) {
+		BorderPane pane = newFrame(Color.CHARTREUSE);
+		pane.setLeft(new Label(event.getKind() == RestEvent.Kind.SHORT ? "Short rest" : "Long rest"));
+		return pane;
+	}
+	
+	public static Parent combatEvent(CombatEvent event) {
+		BorderPane pane = newFrame(Color.INDIANRED);
 		pane.setLeft(new Label(event.getText()));
 		pane.setRight(new Label("+" + event.getXp() + " xp"));
 		return pane;

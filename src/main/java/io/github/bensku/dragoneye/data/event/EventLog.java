@@ -8,7 +8,9 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.dizitart.no2.FindOptions;
 import org.dizitart.no2.NitriteId;
+import org.dizitart.no2.SortOrder;
 import org.dizitart.no2.objects.Cursor;
 import org.dizitart.no2.objects.ObjectRepository;
 
@@ -45,9 +47,9 @@ public class EventLog {
 		 */
 		public void addEvent(GameEvent event) {
 			event.setLogIndexInternal(nextEvent++);
-			event.added(this, game); // Let event to mutate log
 			events.insert(event);
 			notifyListeners(event, ChangeListener::added);
+			event.added(this, game); // Let event to mutate log
 		}
 		
 		/**
@@ -60,8 +62,8 @@ public class EventLog {
 			} // else: leaving a hole in event ids for DB to handle
 			event.setLogIndexInternal(-1); // Not in log anymore
 			event.removed(this, game); // Let event to mutate log
-			events.remove(event);
 			notifyListeners(event, ChangeListener::removed);
+			events.remove(event);
 		}
 		
 		/**
@@ -69,8 +71,8 @@ public class EventLog {
 		 * @param event Event to update.
 		 */
 		public void updateEvent(GameEvent event) {
-			events.update(event);
 			notifyListeners(event, ChangeListener::updated);
+			events.update(event);
 			// With updates, we do not allow events to mutate log
 			// Unless UI allows updates to XP, this shouldn't be a big deal
 			// (GM retroactively changing XP is seldom a good idea, anyway)
@@ -227,7 +229,7 @@ public class EventLog {
 	 * @return All events.
 	 */
 	public Stream<GameEvent> getAllEvents() {
-		Cursor<GameEvent> cursor = events.find();
+		Cursor<GameEvent> cursor = events.find(FindOptions.sort("logIndex", SortOrder.Ascending));
 		Spliterator<GameEvent> spliterator = Spliterators.spliterator(cursor.iterator(), cursor.size(),
 				Spliterator.ORDERED | Spliterator.SIZED);
 		return StreamSupport.stream(spliterator, false).map(e -> {
