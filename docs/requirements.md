@@ -30,7 +30,7 @@ The application is used locally by GM, who is the only user.
 * Game view
   * Shows scrollable event log (game notes)
   * All actions that change notes support undo and redo
-  * Allows creating, deleting, reordering and editing events
+  * Allows creating and deleting events
   * Shows overview of characters in world of the game
 
 ## Initial Functionality
@@ -41,9 +41,6 @@ The application is used locally by GM, who is the only user.
   * There should be many event types available (see "Event Types" below)
 * GM may expect some events to be added to notes automatically
 * GM may remove previously added events
-* GM may edit events, if it makes sense with their event type
-* GM may reorder events in notes
-  * Timestamps should not change
 * GM may undo and redo their edits to notes
 * GM may stop the game
 * GM may do most actions needed during game with keyboard only
@@ -56,7 +53,6 @@ The application is used locally by GM, who is the only user.
 * GM may create games in worlds, and delete games
 * GM may start games and resume paused games
 * GM may review notes from all games
-* GM may search events, within one game or all games
 
 ## Event Types
 The application needs to support following event types:
@@ -76,9 +72,9 @@ The application needs to support following event types:
   * Combat in D&D requires characters to spend resources
 
 ## Environment
-* Application must work on Java 8 and 11
+* Application must work on Java 11
 * Application must work on Linux
-  * Java 8 or 11 may need to be installed
+  * Java 11 may need to be installed
 * Data will be stored locally on GM's computer
   * The application will not require Internet connection
 
@@ -88,3 +84,5 @@ The application needs to support following event types:
 * Requirement for Java installation could be dropped
   * Potential solutions: jlink, GraalVM native image, DIY solution
 * Windows support should be reasonable easy to add; Java is portable
+* Support for editing events could be added
+* Searching worlds, games and especially events would be useful
