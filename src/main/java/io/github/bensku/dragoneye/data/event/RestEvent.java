@@ -39,12 +39,15 @@ public class RestEvent extends GameEvent {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		RestEvent other = (RestEvent) obj;
 		return kind == other.kind;
 	}

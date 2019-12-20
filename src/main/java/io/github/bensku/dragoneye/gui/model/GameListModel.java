@@ -24,6 +24,10 @@ public class GameListModel {
 	 */
 	private final ObservableList<Game> games;
 
+	/**
+	 * Creates a model of all games in a world.
+	 * @param world World to get games from.
+	 */
 	public GameListModel(GameWorld world) {
 		this.world = world;
 		this.games = FXCollections.observableArrayList();

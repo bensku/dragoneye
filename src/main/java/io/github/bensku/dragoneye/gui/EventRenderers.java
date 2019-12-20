@@ -18,7 +18,7 @@ import javafx.scene.paint.Paint;
  * Event renderers as static methods. Use them as method references!
  *
  */
-public class EventRenderers {
+class EventRenderers {
 	
 	private static BorderPane newFrame(Paint background) {
 		BorderPane pane = new BorderPane();

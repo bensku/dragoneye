@@ -22,6 +22,10 @@ public class WorldListModel {
 	 */
 	private final ObservableList<GameWorld> worlds;
 	
+	/**
+	 * Creates a new model of all worlds in given universe.
+	 * @param universe Universe to get worlds from.
+	 */
 	public WorldListModel(Universe universe) {
 		this.universe = universe;
 		this.worlds = FXCollections.observableArrayList();
@@ -50,7 +54,7 @@ public class WorldListModel {
 	}
 	
 	/**
-	 * Creates a new world and append it to end of 
+	 * Creates a new world and append it to end of the list.
 	 * @return A new game world.
 	 */
 	public GameWorld createWorld() {

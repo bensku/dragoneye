@@ -14,6 +14,10 @@ import javafx.stage.Stage;
  */
 public class Bootstrap {
 
+	/**
+	 * Launches the Dragoneye GUI.
+	 * @param args Command-line arguments. Currently none are used.
+	 */
 	public static void main(String... args) {
 		// Application setup
 		EventTypes.finishRegistrations();

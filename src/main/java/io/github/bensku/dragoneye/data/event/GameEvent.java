@@ -45,7 +45,7 @@ public class GameEvent {
 	    this(0);
 	}
 	
-	public GameEvent(int xp) {
+	protected GameEvent(int xp) {
 		this.logIndex = -1;
 		this.creationTime = System.currentTimeMillis();
 		this.xp = xp;

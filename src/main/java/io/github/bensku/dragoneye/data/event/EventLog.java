@@ -132,6 +132,13 @@ public class EventLog {
 	 */
 	private final List<ChangeListener> changeListeners;
 	
+	/**
+	 * Creates a new event log.
+	 * @param game Game this is for.
+	 * @param actions Undo/redo buffer.
+	 * @param lastAction Index of last action that has not been undone.
+	 * @param events Database "table" of all events.
+	 */
 	public EventLog(Game game, List<LogAction> actions, int lastAction, ObjectRepository<GameEvent> events) {
 		this.game = game;
 		this.mutator = new Mutator();

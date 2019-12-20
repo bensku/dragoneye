@@ -16,20 +16,25 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
 public class GameSelectView extends BorderPane {
-	
+
+	/**
+	 * Creates a new view that allows selecting a game.
+	 * @param gameList Model of all games in a world.
+	 * @param openHandler Called when user wants to open a game.
+	 */
 	public GameSelectView(GameListModel gameList, Consumer<Game> openHandler) {
 		ListView<Game> listView = new ListView<>(gameList.getGames());
 		listView.setCellFactory(view -> new GameCell());
-		
+
 		Button createGame = new Button("Start");
 		createGame.setPrefWidth(225);
 		Button deleteGame = new Button("Delete");
 		deleteGame.setPrefWidth(225);
 		HBox buttons = new HBox(createGame, deleteGame);
-		
+
 		setCenter(listView);
 		setBottom(buttons);
-		
+
 		// Starting and deleting games
 		createGame.setOnAction(e -> openHandler.accept(gameList.createGame()));
 		deleteGame.setOnAction(e -> {
@@ -37,19 +42,19 @@ public class GameSelectView extends BorderPane {
 			if (selected == -1) {
 				return; // Nothing selected?
 			}
-			
+
 			// Ask for confirmation
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("Delete world?");
 			alert.setContentText("All data in the game will be permanently lost.");
 			Optional<ButtonType> result = alert.showAndWait();
-			if (result.isEmpty() || !result.get().equals(ButtonType.OK) ) {
+			if (result.isEmpty() || !result.get().equals(ButtonType.OK)) {
 				return; // User didn't confirm deletion
 			}
-			
+
 			gameList.getGames().remove(selected);
 		});
-		
+
 		// Opening past games
 		listView.setOnMouseClicked(e -> {
 			if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
@@ -60,23 +65,23 @@ public class GameSelectView extends BorderPane {
 			}
 		});
 	}
-	
+
 	/**
 	 * Renders information about games in list.
 	 *
 	 */
 	private static class GameCell extends ListCell<Game> {
-		
+
 		@Override
 		public void updateItem(Game game, boolean empty) {
 			super.updateItem(game, empty);
-		     if (empty || game == null) {
-		         setText(null);
-		         setGraphic(null);
-		     } else {
-		    	 // TODO more readable format
-		         setText(game.getCreationTime().toString());
-		     }
+			if (empty || game == null) {
+				setText(null);
+				setGraphic(null);
+			} else {
+				// TODO more readable format
+				setText(game.getCreationTime().toString());
+			}
 		}
 	}
 }

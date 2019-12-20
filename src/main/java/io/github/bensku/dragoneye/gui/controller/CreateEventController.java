@@ -35,6 +35,11 @@ import javafx.scene.text.Font;
  */
 public class CreateEventController extends GridPane {
 	
+	/**
+	 * Creates a new builder that can be used to create event creation
+	 * controller.
+	 * @return A nnew builder.
+	 */
 	public static Builder builder() {
 		return new Builder();
 	}

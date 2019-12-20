@@ -103,6 +103,10 @@ public class EventListView extends BorderPane {
 	 */
 	private final Map<Class<? extends GameEvent>, EventRenderer<GameEvent>> renderers;
 
+	/**
+	 * Creates a new event list view.
+	 * @param log Backing event log.
+	 */
 	public EventListView(EventLog log) {
 		this.log = log;
 		this.initialized = false;
@@ -176,12 +180,21 @@ public class EventListView extends BorderPane {
 		}
 	}
 
+	/**
+	 * Registers a new event type to this view.
+	 * @param <T> Type of event.
+	 * @param type Event class.
+	 * @param renderer Event renderer function.
+	 */
 	@SuppressWarnings("unchecked") // Map key is event type, so this is mostly safe
 	public <T extends GameEvent> void addType(Class<T> type, EventRenderer<T> renderer) {
 		checkInitialize(false);
 		renderers.put(type, (EventRenderer<GameEvent>) renderer);
 	}
 
+	/**
+	 * Initializes this event list view.
+	 */
 	public void initialize() {
 		log.getAllEvents().forEach(eventsView.getItems()::add);
 		initialized = true;

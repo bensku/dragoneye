@@ -16,7 +16,7 @@ public class EventTypes {
 	/**
 	 * Registered events.
 	 */
-	private static final Set<Class<? extends GameEvent>> events = new HashSet<>();
+	private static final Set<Class<? extends GameEvent>> EVENTS = new HashSet<>();
 	
 	/**
 	 * If new registrations are allowed.
@@ -29,7 +29,7 @@ public class EventTypes {
 	 * @param type Event type to register.
 	 */
 	public static void registerEvent(Class<? extends GameEvent> type) {
-		events.add(type);
+		EVENTS.add(type);
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class EventTypes {
 		if (!finished) {
 			throw new IllegalStateException("registrations not finished");
 		}
-		return Collections.unmodifiableCollection(events);
+		return Collections.unmodifiableCollection(EVENTS);
 	}
 	
 	// Our default event types

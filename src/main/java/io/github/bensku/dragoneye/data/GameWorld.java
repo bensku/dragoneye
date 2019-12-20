@@ -56,7 +56,6 @@ public class GameWorld {
 	}
 
 	public void setName(String name) {
-	    Objects.requireNonNull(name);
 		this.name = name;
 	}
 
@@ -68,6 +67,11 @@ public class GameWorld {
 		return universe.characters.find(ObjectFilters.eq("worldId", id));
 	}
 	
+	/**
+	 * Gets a character by its id.
+	 * @param id Character id.
+	 * @return A character, or null none with given id exist.
+	 */
 	public PlayerCharacter getCharacter(int id) {
 		return universe.characters.find(ObjectFilters.eq("id", id)).firstOrDefault();
 	}

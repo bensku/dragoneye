@@ -9,6 +9,11 @@ import javafx.scene.layout.BorderPane;
  */
 public class GameRootView extends BorderPane {
 
+	/**
+	 * Constructs a new game root view.
+	 * @param eventList View with all added events.
+	 * @param createController Controller for creating more events.
+	 */
 	public GameRootView(EventListView eventList, CreateEventController createController) {
 		setCenter(eventList);
 		setBottom(createController);

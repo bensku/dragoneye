@@ -32,6 +32,9 @@ public class RootView extends BorderPane {
 	 */
 	private final StringProperty title;
 	
+	/**
+	 * Constructs a new root view.
+	 */
 	public RootView() {
 		this.views = new ArrayList<>();
 		this.titles = new ArrayList<>();

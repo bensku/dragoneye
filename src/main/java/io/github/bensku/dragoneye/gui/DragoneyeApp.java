@@ -42,6 +42,10 @@ public class DragoneyeApp extends Application {
 	 */
 	private final RootView rootView;
 	
+	/**
+	 * Creates a new instance of Dragoneye. Must be called from JavaFX thread.
+	 * @param universe Universe to launch on.
+	 */
 	public DragoneyeApp(Universe universe) {
 		this.universe = universe;
 		this.rootView = new RootView();
@@ -84,29 +88,34 @@ public class DragoneyeApp extends Application {
 		eventList.initialize();
 		
 		// Event creation tools
-		CreateEventController createController = CreateEventController.builder()
-				.eventType()
-						.button(makeSneakyRadioButton("Text"))
-						.constructor((details, xp) -> details.isEmpty() ? null : new TextEvent(details, xp))
-						.finish()
-				.eventType()
-						.button(makeSneakyRadioButton("Combat"))
-						.constructor((details, xp) -> new CombatEvent(details, xp))
-						.finish()
-				.eventType()
-						.button(makeSneakyRadioButton("Short rest"))
-						.constructor((details, xp) -> new RestEvent(RestEvent.Kind.SHORT))
-						.activateImmediately()
-						.finish()
-				.eventType()
-						.button(makeSneakyRadioButton("Long rest"))
-						.constructor((details, xp) -> new RestEvent(RestEvent.Kind.LONG))
-						.activateImmediately()
-						.finish()
-				.eventListener(log::addEvent)
-				.build();
+		CreateEventController createController = newCreateEventControl(log);
 		
+		// Open the view with both of them
 		rootView.open("Game " + game.getCreationTime().toString(), new GameRootView(eventList, createController));
+	}
+	
+	private CreateEventController newCreateEventControl(EventLog log) {
+		return CreateEventController.builder()
+				.eventType()
+				.button(makeSneakyRadioButton("Text"))
+				.constructor((details, xp) -> details.isEmpty() ? null : new TextEvent(details, xp))
+				.finish()
+		.eventType()
+				.button(makeSneakyRadioButton("Combat"))
+				.constructor((details, xp) -> new CombatEvent(details, xp))
+				.finish()
+		.eventType()
+				.button(makeSneakyRadioButton("Short rest"))
+				.constructor((details, xp) -> new RestEvent(RestEvent.Kind.SHORT))
+				.activateImmediately()
+				.finish()
+		.eventType()
+				.button(makeSneakyRadioButton("Long rest"))
+				.constructor((details, xp) -> new RestEvent(RestEvent.Kind.LONG))
+				.activateImmediately()
+				.finish()
+		.eventListener(log::addEvent)
+		.build();
 	}
 	
 	private RadioButton makeSneakyRadioButton(String label) {
