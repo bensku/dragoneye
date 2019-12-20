@@ -18,7 +18,7 @@ public class Bootstrap {
 		// Application setup
 		EventTypes.finishRegistrations();
 		
-		// Load universe (TODO load it from a file)
+		// Load universe
 		Universe universe = Universe.openOrCreate(Paths.get("dragoneye.db"));
 		
 		Platform.startup(() -> {
