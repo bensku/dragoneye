@@ -1,6 +1,7 @@
 package io.github.bensku.dragoneye.data;
 
 import java.time.Instant;
+import java.util.Objects;
 
 import org.dizitart.no2.objects.Id;
 
@@ -19,7 +20,7 @@ public class Game {
 	 * Unique id of this game.
 	 */
 	@Id
-	private final int index;
+	final int index;
 	
 	/**
 	 * Id of our game world.
@@ -59,4 +60,22 @@ public class Game {
 	public Instant getCreationTime() {
 	    return Instant.ofEpochMilli(creationTime);
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(creationTime, index, worldId);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Game other = (Game) obj;
+		return creationTime == other.creationTime && index == other.index && worldId == other.worldId;
+	}
+	
 }

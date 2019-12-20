@@ -86,7 +86,7 @@ public class PlayerCharacter {
 
 	public void setXp(int xp) {
 	    if (xp < 0) {
-	        throw new IllegalArgumentException();
+	        throw new IllegalArgumentException("negative xp: " + xp);
 	    }
 		this.xp = xp;
 	}

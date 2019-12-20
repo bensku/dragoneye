@@ -107,7 +107,7 @@ public class GameWorld {
 		game.world = this; // Reference to this world
 		// Create event log
 		// TODO persistent action history?
-		game.events = new EventLog(game, new ArrayList<>(), 0, db.getRepository("events-" + id, GameEvent.class));
+		game.events = new EventLog(game, new ArrayList<>(), -1, db.getRepository("events-" + game.index, GameEvent.class));
 		return game;
 	}
 	
@@ -138,5 +138,15 @@ public class GameWorld {
 	 */
 	public void updateGame(Game game) {
 		universe.games.update(game);
+	}
+	
+	/**
+	 * Removes the given game from this world.
+	 * @param game Game to remove.
+	 */
+	public void removeGame(Game game) {
+		// Clear event log, then remove this game from DB
+		db.getRepository("events-" + game.index, GameEvent.class).drop();
+		universe.games.remove(game);
 	}
 }

@@ -53,6 +53,9 @@ public class RootView extends BorderPane {
 	 * Goes back to previous view.
 	 */
 	public void back() {
+		if (views.size() == 1) {
+			return; // Can't go back here
+		}
 		views.remove(views.size() - 1);
 		titles.remove(titles.size() - 1);
 		refresh();

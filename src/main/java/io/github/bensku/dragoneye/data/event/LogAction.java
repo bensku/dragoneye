@@ -25,7 +25,7 @@ public class LogAction {
 	 * to safeguard against executing same action more once, which would break
 	 * undo history.
 	 */
-	boolean executed;
+	private boolean executed;
 	
 	/**
 	 * Creates a new log action. Callers should provide applier and undoer
@@ -39,6 +39,10 @@ public class LogAction {
 		this.executed = false;
 	}
 	
+	public boolean hasBeenExecuted() {
+		return executed;
+	}
+	
 	/**
 	 * Applies this action to an event log.
 	 * @param mutator Event log mutator.
@@ -49,6 +53,7 @@ public class LogAction {
 			throw new IllegalArgumentException("already applied");
 		}
 		applier.accept(mutator, game);
+		executed = true;
 	}
 	
 	/**
@@ -61,5 +66,6 @@ public class LogAction {
 			throw new IllegalArgumentException("already undone");
 		}
 		undoer.accept(mutator, game);
+		executed = false;
 	}
 }

@@ -1,5 +1,7 @@
 package io.github.bensku.dragoneye;
 
+import java.nio.file.Paths;
+
 import io.github.bensku.dragoneye.data.Universe;
 import io.github.bensku.dragoneye.data.event.EventTypes;
 import io.github.bensku.dragoneye.gui.DragoneyeApp;
@@ -17,7 +19,7 @@ public class Bootstrap {
 		EventTypes.finishRegistrations();
 		
 		// Load universe (TODO load it from a file)
-		Universe universe = Universe.create();
+		Universe universe = Universe.openOrCreate(Paths.get("dragoneye.db"));
 		
 		Platform.startup(() -> {
 			DragoneyeApp app = new DragoneyeApp(universe);

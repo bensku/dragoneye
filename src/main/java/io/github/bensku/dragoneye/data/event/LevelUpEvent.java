@@ -74,10 +74,5 @@ public class LevelUpEvent extends GameEvent {
 		LevelUpEvent other = (LevelUpEvent) obj;
 		return charId == other.charId && level == other.level;
 	}
-
-	@Override
-	public String toString() {
-		return "LevelUpEvent [charId=" + charId + ", level=" + level + "]";
-	}
 	
 }

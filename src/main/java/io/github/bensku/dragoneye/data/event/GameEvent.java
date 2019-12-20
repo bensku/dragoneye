@@ -45,7 +45,7 @@ public class GameEvent {
 	    this(0);
 	}
 	
-	protected GameEvent(int xp) {
+	public GameEvent(int xp) {
 		this.logIndex = -1;
 		this.creationTime = System.currentTimeMillis();
 		this.xp = xp;
@@ -108,6 +108,8 @@ public class GameEvent {
 	            LevelUpEvent event = new LevelUpEvent(pc, pc.getLevel());
 	            addDependentEvent(event);
 	            mut.addEvent(event);
+	            
+	            game.getWorld().updateCharacter(pc); // It just gained a level!
 	        }
 	    });
 	}
@@ -129,6 +131,7 @@ public class GameEvent {
         // Take away added XP
         game.getWorld().getCharacters().forEach(pc -> {
             pc.setXp(pc.getXp() - xp);
+            game.getWorld().updateCharacter(pc); // Oh well
         });
 	}
 	

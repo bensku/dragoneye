@@ -5,6 +5,7 @@ import java.util.Map;
 
 import io.github.bensku.dragoneye.data.event.EventLog;
 import io.github.bensku.dragoneye.data.event.GameEvent;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
@@ -42,7 +43,8 @@ public class EventListView extends BorderPane {
 		public void added(GameEvent event) {
 			checkInitialize(true);
 			eventsView.getItems().add(event);
-			eventsView.scrollTo(eventsView.getItems().size() - 1); // Scroll to event that was just added
+			// Scroll to event that was just added
+			Platform.runLater(() -> eventsView.scrollTo(eventsView.getItems().size() - 1));
 		}
 
 		@Override

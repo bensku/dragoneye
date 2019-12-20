@@ -60,22 +60,12 @@ public class EventLog {
 			if (event.getLogIndex() == nextEvent - 1) {
 				nextEvent--; // Removed last in log; we can put something in its place
 			} // else: leaving a hole in event ids for DB to handle
-			event.setLogIndexInternal(-1); // Not in log anymore
 			event.removed(this, game); // Let event to mutate log
 			notifyListeners(event, ChangeListener::removed);
 			events.remove(event);
-		}
-		
-		/**
-		 * Updates a game event that is already in log.
-		 * @param event Event to update.
-		 */
-		public void updateEvent(GameEvent event) {
-			notifyListeners(event, ChangeListener::updated);
-			events.update(event);
-			// With updates, we do not allow events to mutate log
-			// Unless UI allows updates to XP, this shouldn't be a big deal
-			// (GM retroactively changing XP is seldom a good idea, anyway)
+			
+			// Note: DO NOT remove log index before taking event from log
+			event.setLogIndexInternal(-1); // Not in log anymore
 		}
 		
 		// TODO reordering events?
@@ -171,7 +161,7 @@ public class EventLog {
 		if (lastAction == actions.size() - 1) {
 			return; // Nothing to redo
 		}
-		actions.get(lastAction++).apply(mutator, game);
+		actions.get(++lastAction).apply(mutator, game);
 	}
 	
 	/**
@@ -184,7 +174,7 @@ public class EventLog {
 	 * @throws IllegalArgumentException If same action is done more than once.
 	 */
 	public void doAction(LogAction action) {
-		if (action.executed) {
+		if (action.hasBeenExecuted()) {
 			throw new IllegalArgumentException("action already executed");
 		}
 		// Remove undone actions; new action overwrites undo history
@@ -212,16 +202,6 @@ public class EventLog {
 	public void removeEvent(GameEvent event) {
 	    doAction(new LogAction((mut, game) -> mut.removeEvent(event),
 	            (mut, game) -> mut.addEvent(event)));
-	}
-	
-	/**
-	 * Updates data of an event.
-	 * @param event Event to update.
-	 */
-	public void updateEvent(GameEvent event) {
-	    GameEvent original = events.getById(NitriteId.createId((long) event.getLogIndex()));
-	    doAction(new LogAction((mut, game) -> mut.updateEvent(event),
-	            (mut, game) -> mut.updateEvent(original)));
 	}
 	
 	/**

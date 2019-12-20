@@ -35,8 +35,7 @@ public class GameListModel {
 
 	private void gamesChanged(ListChangeListener.Change<? extends Game> c) {
 		while (c.next()) {
-			// TODO game removal
-			//c.getRemoved().stream().forEach(world::removeGame);
+			c.getRemoved().stream().forEach(world::removeGame);
 		}
 	}
 
