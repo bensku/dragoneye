@@ -21,9 +21,13 @@ import io.github.bensku.dragoneye.gui.view.RootView;
 import io.github.bensku.dragoneye.gui.view.WorldSelectView;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.ObservableMap;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -43,6 +47,11 @@ public class DragoneyeApp extends Application {
 	private final RootView rootView;
 	
 	/**
+	 * Map where global key bindings can be added to.
+	 */
+	private ObservableMap<KeyCombination, Runnable> keyBindings;
+	
+	/**
 	 * Creates a new instance of Dragoneye. Must be called from JavaFX thread.
 	 * @param universe Universe to launch on.
 	 */
@@ -55,7 +64,9 @@ public class DragoneyeApp extends Application {
 	public void start(Stage stage) {
 		try {
 			openWorldSelect(universe);
-			stage.setScene(new Scene(rootView, 900, 620));
+			Scene scene = new Scene(rootView, 900, 620);
+			this.keyBindings = scene.getAccelerators();
+			stage.setScene(scene);
 			stage.show();
 			
 			// Startup is done, we should now be able to handle crashes
@@ -91,31 +102,37 @@ public class DragoneyeApp extends Application {
 		CreateEventController createController = newCreateEventControl(log);
 		
 		// Open the view with both of them
-		rootView.open("Game " + game.getCreationTime().toString(), new GameRootView(eventList, createController));
+		rootView.open("Game " + game.getCreationTime().toString(),
+				new GameRootView(eventList, createController, keyBindings, log::undo, log::redo));
 	}
 	
 	private CreateEventController newCreateEventControl(EventLog log) {
 		return CreateEventController.builder()
 				.eventType()
-				.button(makeSneakyRadioButton("Text"))
-				.constructor((details, xp) -> details.isEmpty() ? null : new TextEvent(details, xp))
-				.finish()
-		.eventType()
-				.button(makeSneakyRadioButton("Combat"))
-				.constructor((details, xp) -> new CombatEvent(details, xp))
-				.finish()
-		.eventType()
-				.button(makeSneakyRadioButton("Short rest"))
-				.constructor((details, xp) -> new RestEvent(RestEvent.Kind.SHORT))
-				.activateImmediately()
-				.finish()
-		.eventType()
-				.button(makeSneakyRadioButton("Long rest"))
-				.constructor((details, xp) -> new RestEvent(RestEvent.Kind.LONG))
-				.activateImmediately()
-				.finish()
-		.eventListener(log::addEvent)
-		.build();
+						.button(makeSneakyRadioButton("Text"))
+						.shortcut(new KeyCodeCombination(KeyCode.DIGIT1, KeyCombination.CONTROL_DOWN))
+						.constructor((details, xp) -> details.isEmpty() ? null : new TextEvent(details, xp))
+						.finish()
+				.eventType()
+						.button(makeSneakyRadioButton("Combat"))
+						.shortcut(new KeyCodeCombination(KeyCode.DIGIT2, KeyCombination.CONTROL_DOWN))
+						.constructor((details, xp) -> new CombatEvent(details, xp))
+						.finish()
+				.eventType()
+						.button(makeSneakyRadioButton("Short rest"))
+						.shortcut(new KeyCodeCombination(KeyCode.DIGIT3, KeyCombination.CONTROL_DOWN))
+						.constructor((details, xp) -> new RestEvent(RestEvent.Kind.SHORT))
+						.activateImmediately()
+						.finish()
+				.eventType()
+						.button(makeSneakyRadioButton("Long rest"))
+						.shortcut(new KeyCodeCombination(KeyCode.DIGIT4, KeyCombination.CONTROL_DOWN))
+						.constructor((details, xp) -> new RestEvent(RestEvent.Kind.LONG))
+						.activateImmediately()
+						.finish()
+				.eventListener(log::addEvent)
+				.keyBindings(keyBindings)
+				.build();
 	}
 	
 	private RadioButton makeSneakyRadioButton(String label) {

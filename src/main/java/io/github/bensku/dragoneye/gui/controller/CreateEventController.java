@@ -9,10 +9,12 @@ import java.util.function.Consumer;
 
 import io.github.bensku.dragoneye.data.event.GameEvent;
 import io.github.bensku.dragoneye.gui.controller.CreateEventController.Builder.TypeBuilder;
+import io.github.bensku.dragoneye.gui.view.RootView;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableMap;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
@@ -34,7 +36,7 @@ import javafx.scene.text.Font;
  *
  */
 public class CreateEventController extends GridPane {
-	
+
 	/**
 	 * Creates a new builder that can be used to create event creation
 	 * controller.
@@ -138,6 +140,11 @@ public class CreateEventController extends GridPane {
 		 */
 		private final List<Consumer<GameEvent>> eventListeners;
 		
+		/**
+		 * Key bindings map.
+		 */
+		private ObservableMap<KeyCombination, Runnable> keyBindings;
+		
 		private Builder() {
 			this.finishedTypes = new ArrayList<>();
 			this.eventListeners = new ArrayList<>();
@@ -162,11 +169,21 @@ public class CreateEventController extends GridPane {
 		}
 		
 		/**
+		 * Sets where key bindings are registered.
+		 * @param keyBindings Key bindings map.
+		 * @return This builder.
+		 */
+		public Builder keyBindings(ObservableMap<KeyCombination, Runnable> keyBindings) {
+			this.keyBindings = keyBindings;
+			return this;
+		}
+		
+		/**
 		 * Builds a new controller based on data added to this builder.
 		 * @return A new controller.
 		 */
 		public CreateEventController build() {
-			return new CreateEventController(finishedTypes, eventListeners);
+			return new CreateEventController(finishedTypes, eventListeners, keyBindings);
 		}
 	}
 	
@@ -212,10 +229,17 @@ public class CreateEventController extends GridPane {
 	 * Current game event information we need to fire it.
 	 */
 	private final ObjectProperty<ActionInfo> currentEvent;
+	
+	/**
+	 * Map where we register key bindings.
+	 */
+	private final ObservableMap<KeyCombination, Runnable> keyBindings;
 
-	private CreateEventController(List<TypeBuilder> types, List<Consumer<GameEvent>> listeners) {
+	private CreateEventController(List<TypeBuilder> types, List<Consumer<GameEvent>> listeners,
+			ObservableMap<KeyCombination, Runnable> keyBindings) {
 		this.listeners = listeners;
 		this.currentEvent = new SimpleObjectProperty<>();
+		this.keyBindings = keyBindings;
 				
 		// Details text area
 		this.detailsField = new TextArea();
@@ -256,14 +280,30 @@ public class CreateEventController extends GridPane {
 		ToggleGroup typeGroup = new ToggleGroup();
 		HBox typeButtons = new HBox();
 		for (TypeBuilder type : types) {
+			ActionInfo info = new ActionInfo(type.constructor, type.activateImmediately);
+			
+			// Place button if one has been configured
 			RadioButton button = type.button;
 			if (button != null) {
 				button.setPrefHeight(Double.MAX_VALUE);
 				button.setPrefWidth(10_000);
 				button.setToggleGroup(typeGroup);
-				button.setUserData(new ActionInfo(type.constructor, type.activateImmediately));
+				button.setUserData(info);
 				typeButtons.getChildren().add(button);
 			}
+			
+			// Register shortcuts
+			for (KeyCombination shortcut : type.shortcuts) {
+				keyBindings.put(shortcut, () -> {
+					if (info.activateImmediately) {
+						createEvent(info); // Immediately create an event
+					} else { // Select appropriate button if possible
+						typeGroup.selectToggle(button);
+						currentEvent.set(info);
+					}
+				});
+			}
+			
 		}
 		add(typeButtons, 0, 2, 1, 1);
 		

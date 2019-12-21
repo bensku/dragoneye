@@ -27,3 +27,4 @@ Commit messages go to more detail about changes in code.
 | 19.12 | 1    | add support for all required event types |
 | 20.12 | 2    | exploratory testing, improving automated tests |
 |       | 1    | implementing checkstyle |
+| 21.12 | 1    | adding more shortcuts |

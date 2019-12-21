@@ -16,6 +16,24 @@ import javafx.scene.text.Font;
  *
  */
 public class RootView extends BorderPane {
+	
+	/**
+	 * A view that implements this receives events when it is opened
+	 * and closed.
+	 *
+	 */
+	public static interface NavigationListener {
+		
+		/**
+		 * Called after the view has been opened.
+		 */
+		void opened();
+		
+		/**
+		 * Called after the view has been closed.
+		 */
+		void closed();
+	}
 
 	/**
 	 * Views available.
@@ -59,7 +77,10 @@ public class RootView extends BorderPane {
 		if (views.size() == 1) {
 			return; // Can't go back here
 		}
-		views.remove(views.size() - 1);
+		Parent view = views.remove(views.size() - 1);
+		if (view instanceof NavigationListener) {
+			((NavigationListener) view).closed();
+		}
 		titles.remove(titles.size() - 1);
 		refresh();
 	}
@@ -71,6 +92,9 @@ public class RootView extends BorderPane {
 	 */
 	public void open(String title, Parent view) {
 		views.add(view);
+		if (view instanceof NavigationListener) {
+			((NavigationListener) view).opened();
+		}
 		titles.add(title);
 		refresh();
 	}
