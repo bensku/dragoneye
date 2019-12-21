@@ -128,6 +128,6 @@ public class Universe {
 		
 		// Clean up data under the world
 		world.getGames().forEach(world::removeGame); // Games
-		characters.find(ObjectFilters.eq("worldId", world.id)); // Characters
+		characters.remove(ObjectFilters.eq("worldId", world.id)); // Characters
 	}
 }
