@@ -28,3 +28,6 @@ Commit messages go to more detail about changes in code.
 | 20.12 | 2    | exploratory testing, improving automated tests |
 |       | 1    | implementing checkstyle |
 | 21.12 | 1    | adding more shortcuts |
+|       | 3    | improving and updating documentation |
+|       | 1    | finishing touches, submitting to lecturer |
+| Total | 33.5 | |

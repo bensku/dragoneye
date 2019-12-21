@@ -149,3 +149,10 @@ They heavily delegate to other views and controllers.
 usage.md and shows title of current view at top of window. It also
 notifies the views when they become visible or are removed due to
 user going back.
+
+## Architectural problems
+Dragoneye's application logic is too tightly coupled with Nitrite database
+and Jackson serializer it uses. Abstracting these away beyond very simple
+DAOs would have been ideal. Unfortunately, it would probably take a lot
+of time, because Dragoneye has requires polymorphic (de)serialization
+that is not widely supported.
