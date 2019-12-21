@@ -20,4 +20,10 @@ public class GameWorldTest {
 		data.world.removeCharacter(data.pc);
 		assertEquals(0, data.world.getCharacters().totalCount());
 	}
+	
+	@Test
+	public void removeGame() {
+		data.world.removeGame(data.game);
+		assertEquals(0, data.world.getGames().count());
+	}
 }

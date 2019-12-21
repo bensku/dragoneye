@@ -22,8 +22,8 @@ Clone this repository and run Maven there:
 ```
 mvn package
 ```
-This might take a few minutes, because Maven will need to download all
-dependencies of Dragoneye.
+This will run fetch dependencies, compile Dragoneye and run all tests.
+Finally, an jar with all dependencies is created.
 
 Once done, you should have an executable jar <code>target</code>.
 You can run it from command prompt:
@@ -32,3 +32,26 @@ java -jar target/dragoneye-0.0.1-SNAPSHOT-jar-with-dependencies.jar
 ```
 Dragoneye stores its data in a file named <code>dragoneye.db</code>
 in the current directory.
+
+### Test coverage and code quality
+A test coverage report can be created with
+```
+mvn jacoco:report
+```
+It will be placed at <code>target/site/jacoco/index.html</code>.
+
+A Checkstyle report can be created with
+```
+mvn jxr:jxr checkstyle:checkstyle
+```
+It will be placed at <code>target/site/checkstyle.html</code>. Unfortunately,
+the resulting page looks rather ugly.'
+
+### Javadoc
+Javadoc of Dragoneye may be generated with
+```
+mvn javadoc:javadoc
+```
+You will need to ensure that your <code>JAVA_HOME</code> points to a valid
+JDK installation. Even successful generation may produce errors, because
+Dragoneye does not use Java Platform Module System.

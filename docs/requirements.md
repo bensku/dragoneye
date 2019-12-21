@@ -40,7 +40,6 @@ The application is used locally by GM, who is the only user.
   * Events should contain timestamp when they were added
   * There should be many event types available (see "Event Types" below)
 * GM may expect some events to be added to notes automatically
-* GM may remove previously added events
 * GM may undo and redo their edits to notes
 * GM may stop the game
 * GM may do most actions needed during game with keyboard only
@@ -84,5 +83,6 @@ The application needs to support following event types:
 * Requirement for Java installation could be dropped
   * Potential solutions: jlink, GraalVM native image, DIY solution
 * Windows support should be reasonable easy to add; Java is portable
+* Removing events (outside of undo) *should* be supported
 * Support for editing events could be added
 * Searching worlds, games and especially events would be useful
