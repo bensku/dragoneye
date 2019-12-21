@@ -2,6 +2,16 @@
 You should read usage.md before this document; in particular, some terminology
 used here may be confusing unless you have been game master before.
 
+## Technologies used
+Dragoneye builds on Java 11 and Nitrite NoSQL database. The latter was chosen,
+because writing SQL queries by hand would have been time-consuming, and ORM
+support for Java 11 was lacking. Hibernate would have worked, but configuring
+it by hand (i.e. not using Spring Boot) would've been challenging.
+
+Current GUI is built with JavaFX 11. Swing, AWT or SWT could have used instead
+of it, but they are all *very* old and not exactly pleasant to use. While
+JavaFX is far from perfect, in this case it was better than the alternatives.
+
 ## Application logic
 Dragoneye's "backend" is completely separate from the GUI. It consists
 of classes that provide high-level access to underlying data storage.

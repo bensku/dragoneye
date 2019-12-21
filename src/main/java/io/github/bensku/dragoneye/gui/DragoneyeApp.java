@@ -67,6 +67,7 @@ public class DragoneyeApp extends Application {
 			Scene scene = new Scene(rootView, 900, 620);
 			this.keyBindings = scene.getAccelerators();
 			stage.setScene(scene);
+			stage.setTitle("Dragoneye");
 			stage.show();
 			
 			// Startup is done, we should now be able to handle crashes
