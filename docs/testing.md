@@ -48,3 +48,7 @@ included in Jacoco report.
 There are no major known bugs. However, testing has revealed that usability of
 the UI could be better. In particular, even more keyboard shortcuts could be
 added.
+
+On Cubbli, JavaFX may print warnings to console due to missing GTK modules.
+This is a distro-specific issue that cannot be fixed without root access.
+Nevertheless, the warnings should be harmless.

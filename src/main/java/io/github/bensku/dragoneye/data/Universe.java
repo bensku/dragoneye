@@ -8,6 +8,7 @@ import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.NitriteBuilder;
 import org.dizitart.no2.mapper.JacksonMapper;
 import org.dizitart.no2.objects.ObjectRepository;
+import org.dizitart.no2.objects.filters.ObjectFilters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
@@ -124,6 +125,9 @@ public class Universe {
 	 */
 	public void removeWorld(GameWorld world) {
 		worlds.remove(world);
-		// TODO we need to clean up associated data
+		
+		// Clean up data under the world
+		world.getGames().forEach(world::removeGame); // Games
+		characters.find(ObjectFilters.eq("worldId", world.id)); // Characters
 	}
 }
