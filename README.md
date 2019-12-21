@@ -55,3 +55,11 @@ mvn javadoc:javadoc
 You will need to ensure that your <code>JAVA_HOME</code> points to a valid
 JDK installation. Even successful generation may produce errors, because
 Dragoneye does not use Java Platform Module System.
+
+## Development and Debugging
+When Dragoneye crashes, it does not print stack trace by default.
+Run it with JVM argument <code>-Ddragoneye.debug</code> to enable
+printing stack traces to the console.
+
+Development of Dragoneye has been done in Eclipse, but any IDE or
+even a text editor should work.

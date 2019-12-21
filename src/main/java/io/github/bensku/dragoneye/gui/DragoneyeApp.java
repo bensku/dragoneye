@@ -149,7 +149,9 @@ public class DragoneyeApp extends Application {
 	 */
 	private static void handleCrash(Thread t, Throwable e) {
 		LOG.error("Uncaught exception; crashing to prevent data corruption");
-		e.printStackTrace(); // TODO remove, gate behind system property?
+		if (System.getProperty("dragoneye.debug") != null) {
+			e.printStackTrace();
+		}
 		
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Dragoneye: Critical Error");
