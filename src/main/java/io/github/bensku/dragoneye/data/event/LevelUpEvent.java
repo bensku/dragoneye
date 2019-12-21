@@ -35,12 +35,21 @@ public class LevelUpEvent extends GameEvent {
 		this.level = level;
 	}
 	
+	/**
+	 * Creates a new level up event.
+	 * @param character Character that leveled up.
+	 * @param level New level of the character.
+	 */
 	public LevelUpEvent(PlayerCharacter character, int level) {
 		this.character = character;
 		this.charId = character.getId();
 		this.level = level;
 	}
 	
+	/**
+	 * Gets the character that leveled up.
+	 * @return Character that leveled up.
+	 */
 	public PlayerCharacter getCharacter() {
 		Objects.requireNonNull(character, "not injected yet");
 		return character;

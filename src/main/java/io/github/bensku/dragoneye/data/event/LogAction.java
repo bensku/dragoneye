@@ -39,6 +39,11 @@ public class LogAction {
 		this.executed = false;
 	}
 	
+	/**
+	 * Gets if this action has been executed yet. Note that undoing could make
+	 * this action not have been executed even if it was executed before.
+	 * @return If this has been executed.
+	 */
 	public boolean hasBeenExecuted() {
 		return executed;
 	}

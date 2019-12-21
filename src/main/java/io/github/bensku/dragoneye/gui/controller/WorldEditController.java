@@ -54,6 +54,10 @@ public class WorldEditController extends GridPane {
 		GridPane.setHgrow(charactersPane, Priority.ALWAYS);
 	}
 	
+	/**
+	 * Name of the world this is editing.
+	 * @return World name.
+	 */
 	public StringProperty nameProperty() {
 		return name;
 	}

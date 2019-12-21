@@ -66,6 +66,10 @@ public class PlayerCharacter {
 		return name;
 	}
 
+	/**
+	 * Gets name of this character.
+	 * @param name Name. Must not be null.
+	 */
 	public void setName(String name) {
 	    Objects.requireNonNull(name);
 		this.name = name;
@@ -75,6 +79,10 @@ public class PlayerCharacter {
 		return charClass;
 	}
 
+	/**
+	 * Sets class of this character.
+	 * @param charClass Class. Must not be null.
+	 */
 	public void setCharClass(String charClass) {
 	    Objects.requireNonNull(charClass);
 		this.charClass = charClass;
@@ -84,6 +92,10 @@ public class PlayerCharacter {
 		return xp;
 	}
 
+	/**
+	 * Sets XP of this character.
+	 * @param xp XP to set. Must not be negative number.
+	 */
 	public void setXp(int xp) {
 	    if (xp < 0) {
 	        throw new IllegalArgumentException("negative xp: " + xp);
@@ -95,6 +107,7 @@ public class PlayerCharacter {
 	 * Adds XP to this character.
 	 * @param xp How much XP to add.
 	 * @return If the character leveled up.
+	 * @throws IllegalArgumentException When negative XP is given.
 	 */
 	public boolean addXp(int xp) {
 	    if (xp == 0 || levelOverride != -1) {

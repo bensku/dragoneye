@@ -10,6 +10,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class RestEvent extends GameEvent {
 
+	/**
+	 * Rest type. See D&D 5e SRD for details about short and long rests.
+	 *
+	 */
 	public enum Kind {
 		SHORT,
 		LONG
@@ -17,6 +21,10 @@ public class RestEvent extends GameEvent {
 	
 	private final Kind kind;
 	
+	/**
+	 * Creates a new rest event.
+	 * @param kind Rest type.
+	 */
 	public RestEvent(@JsonProperty("kind") Kind kind) {
 		this.kind = kind;
 	}

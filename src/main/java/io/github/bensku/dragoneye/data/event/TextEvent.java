@@ -16,6 +16,11 @@ public class TextEvent extends GameEvent {
 	 */
 	private final String text;
 	
+	/**
+	 * Creates a new plain text event.
+	 * @param text User-provided text.
+	 * @param xp XP gained.
+	 */
 	@JsonCreator
 	public TextEvent(@JsonProperty("text") String text, @JsonProperty("xp") int xp) {
 		super(xp);
